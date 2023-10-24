@@ -1,0 +1,32 @@
+body {
+
+    background-color: #e0faa2;
+
+}
+
+.form-background {
+
+    background-color: #d4f781;
+    border-radius: 20px;
+
+}
+
+.user-info-box {
+
+    font-size: 20px;
+
+}
+
+select:disabled, input:disabled {
+
+    background-color: #b1b3ad !important;
+
+}
+
+ul {
+    list-style-type: none;
+}
+
+.invisible {
+    display: none;
+}

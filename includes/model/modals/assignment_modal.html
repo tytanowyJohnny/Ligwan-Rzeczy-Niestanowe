@@ -1,0 +1,76 @@
+<!-- Assign Modal -->
+<div class="modal fade" id="assign-modal" tabindex="-1" aria-labelledby="Przypisz" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Przypisz nowe zgłoszenie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assign-form" class="needs-validation" novalidate>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon3">ID zgłoszenia</span>
+                        <input type="text" class="form-control" id="assignment_case_id" name="assignment_case_id"
+                            disabled>
+                    </div>
+                    <div class="input-group has-validation mb-3">
+                        <span class="input-group-text" id="basic-addon3">Wykonawca</span>
+                        <select class="form-select" id="modal-addon-vendor" required>
+                            <option selected disabled value="">-- Wybierz --</option>
+                            <option value="conservator">Konserwator</option>
+                            <option value="external_company">Firma zewnętrzna</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Musisz wybrać wykonawcę
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button type="button" class="btn btn-primary" id="assign-submit">Zapisz</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // ASSIGNMENT
+
+    let assignForm = $('#assign-form');
+
+    $('#assign-submit').on('click', () => {
+
+        assignForm.submit();
+    });
+
+    assignForm.on('submit', (event) => {
+
+        if (!assignForm[0].checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+        } else {
+
+            // Handle assign input
+            let assignValue = $('#modal-addon-vendor').val();
+            let caseId = $('#assignment_case_id').val();
+
+            $.ajax({
+
+                type: "GET",
+                url: "../../server/server_assignment.php",
+                data: ({ assignment_type: assignValue, assignment_case_id: caseId }),
+                success: (result) => {
+
+                    if (result != 'true') {
+                        alert('Ups! Coś poszło nie tak, skontaktuj się z administratorem');
+                    }
+
+                }
+            });
+
+        }
+
+        assignForm[0].classList.add('was-validated');
+
+    });
+</script>
