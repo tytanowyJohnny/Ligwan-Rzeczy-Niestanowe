@@ -6,7 +6,7 @@
 
     <?php
 
-    
+
 
     include_once('../db/db.php');
     include('model/user.php');
@@ -22,60 +22,49 @@
         header('Location: ../login.php');
     }
 
-    
+
 
     // Validate if variables were passed on correctly
-    $isValid_dzial = isset($_POST['input-dzial']);
-    $isValid_status = isset($_POST['input-status']);
-    // $isValid_poziom = isset($_POST['input-poziom']); // Poziom might be empty
-    $isValid_device = isset($_POST['input-device']);
-    $isValid_pomieszczenie = isset($_POST['input-pomieszczenie']);
-    $isValid_usterka = isset($_POST['input-usterka']);
-    $isValid_dzialZglaszajacy = isset($_POST['input-dzial-zglaszajacy']);
+    $isValid_order = isset($_POST['input-order']);
+    $isValid_link = isset($_POST['input-link']);
+    $isValid_syntetyka = isset($_POST['input-syntetyka']);
+    $isValid_mpk = isset($_POST['input-mpk']);
+    $isValid_podmiot = isset($_POST['input-podmiot']);
+    $isValid_cost = isset($_POST['input-cost']);
+    $isValid_project = isset($_POST['input-project']);
+    $isValid_amount = isset($_POST['input-amount']);
+    $isValid_comment = isset($_POST['input-comment']);
 
-    if ($isValid_dzial && $isValid_status && $isValid_device && $isValid_pomieszczenie && $isValid_usterka && $isValid_dzialZglaszajacy) {
-
-
-        //Stores the filename as it was on the client computer.
-        $imagename = $_FILES['input-zdjecie-usterka']['name'];
-        //Stores the filetype e.g image/jpeg
-        $imagetype = $_FILES['input-zdjecie-usterka']['type'];
-        //Stores any error codes from the upload.
-        $imageerror = $_FILES['input-zdjecie-usterka']['error'];
-        //Stores the tempname as it is given by the host when uploaded.
-        $imagetemp = $_FILES['input-zdjecie-usterka']['tmp_name'];
-
-        //The path you wish to upload the image to
-        $imagePath = "upload/images/";
-
-        $fullImagePath = $imagePath . $imagename;
+    // echo $isValid_order;
+    // echo $isValid_link;
+    // echo $isValid_syntetyka;
+    // echo $isValid_mpk;
+    // echo $isValid_cost;
+    // echo $isValid_project;
+    // echo $isValid_amount;
+    // echo $isValid_comment;
 
 
-        if (!is_uploaded_file($imagetemp) || !move_uploaded_file($imagetemp, "../" . $fullImagePath))
-            $fullImagePath = null;
+    if ($isValid_order && $isValid_link && $isValid_syntetyka && $isValid_mpk && $isValid_cost && $isValid_project && $isValid_amount && $isValid_comment) {
 
-        // Manual input
-        $manualUsterkaValue = ($_POST['input-usterka'] == '0') ? $_POST['input-usterka-freetext'] : "";
-        // Poziom value check
-        $poziomValue = isset($_POST['input-poziom']) ? isset($_POST['input-poziom']) : "";
+        // echo $_POST['input-cost'];
 
         // Compose query
-        $insertQuery = "INSERT INTO `zgloszenia`(`created_by`, `czas_wprowadzenie`, `status`, `dzial`, `poziom`, `pomieszczenie`, `usterka`, `usterka_manual`, `device`, `device_file`, `dzial_zglaszajacy`, `wykonawca`, `work_image`, `reject_reason`)
+        $insertQuery = "INSERT INTO `zgloszenia` (`created_by`, `czas_wprowadzenie`, `zamowienie`, `link`, `syntetyka`, `mpk`, `podmiot`, `cost`, `project`, `amount`, `comment`)
                     VALUES (
                         '" . $user->getUsername() . "',
                         NOW(),
-                        '" . $_POST['input-status'] . "',
-                        '" . $_POST['input-dzial'] . "',
-                        '" . $_POST['input-poziom'] . "',
-                        '" . $_POST['input-pomieszczenie'] . "',
-                        '" . $_POST['input-usterka'] . "',
-                        '" . $manualUsterkaValue . "',
-                        '" . $_POST['input-device'] . "',
-                        NULLIF('$fullImagePath', ''),
-                        '" . $_POST['input-dzial-zglaszajacy'] . "',
-                        '', '', '')";
+                        '" . $_POST['input-order'] . "',
+                        '" . $_POST['input-link'] . "',
+                        '" . $_POST['input-syntetyka'] . "',
+                        '" . $_POST['input-mpk'] . "',
+                        '" . $_POST['input-podmiot'] . "',
+                        '" . $_POST['input-cost'] . "',
+                        '" . $_POST['input-project'] . "',
+                        '" . $_POST['input-amount'] . "',
+                        '" . $_POST['input-comment'] . "')";
 
-        echo $insertQuery;
+        // echo $insertQuery;
 
 
         // Write to DB
@@ -87,9 +76,11 @@
 
         $db->dbDisconnect();
 
+
         // Whatever happens, redirect to main page
         header('Location: ../index.php');
     }
+
     ?>
 
 </body>

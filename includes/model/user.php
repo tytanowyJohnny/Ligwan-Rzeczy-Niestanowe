@@ -41,6 +41,11 @@ class UserService
         return $this->_user['type_display'];
     }
 
+    public function getUserAccessType()
+    {
+        return $this->_user['typ'];
+    }
+
     public function getUserDepartment() 
     {
         return $this->_user['dzial'];
@@ -52,7 +57,8 @@ class UserService
         $this->_db_handler->dbConnect();
 
         //$result = $this->_db_handler->selectWhereMultiple('users', 'kod', '=', $this->_username, 'char', 'haslo', '=', $this->_password, 'char');
-        $authQuery = "SELECT * FROM `users` WHERE `username`='" . $this->_username . "' AND `password`='" . $this->_password . "'";
+        $authQuery = "SELECT * FROM `users` WHERE `kod`='" . $this->_username . "' AND `haslo`='" . $this->_password . "'";
+
         $result = $this->_db_handler->performQuery($authQuery);
 
         if (!$result)
@@ -78,7 +84,7 @@ class UserService
             // Fetch type display value
             $this->_db_handler->dbConnect();
 
-            $typeQuery = "SELECT `type_label` FROM `user_types` WHERE `type_name`='" . $this->_user['type'] . "'";
+            $typeQuery = "SELECT `type_label` FROM `user_types` WHERE `type_name`='" . $this->_user['typ'] . "'";
 
             $typeResult = $this->_db_handler->performQuery($typeQuery);
 

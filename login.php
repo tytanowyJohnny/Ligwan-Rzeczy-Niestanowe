@@ -12,8 +12,12 @@ if (!isset($_SESSION)) {
 
 if(isset($_POST['username']) && isset($_POST['password'])) {
 
+    // echo "TEST";
+
     $user = new UserService($_POST['username'], $_POST['password']);
     $loginResult = $user->login();
+
+    // echo $loginResult;
 
     if($loginResult) {
         $_SESSION['user_object'] = serialize($user);
@@ -30,7 +34,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
 <html>
 
 <head>
-    <title>Leśnik Drzewiarz</title>
+    <title>Rzeczy Niestanowe</title>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- jQuery -->

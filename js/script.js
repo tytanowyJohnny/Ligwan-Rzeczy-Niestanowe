@@ -1,26 +1,14 @@
 $(document).ready(function () {
 
+    // $('.selectpicker').selectpicker();
+
+
 
     /*
 
         UI Policies
 
     */
-
-    $('#basic-addon-select-usterka').on('change', (e) => {
-
-        let usterkaValue = $('#basic-addon-select-usterka').val();
-
-        if(usterkaValue == '0') {
-            $('#input-group-usterka-freetext').removeClass('invisible');
-            $('#input-usterka-freetext').prop('required', true);
-        } else {
-            $('#input-group-usterka-freetext').addClass('invisible');
-            $('#input-usterka-freetext').prop('required', false);
-        } 
-            
-
-    });
 
 
     /*
@@ -35,6 +23,8 @@ $(document).ready(function () {
     $('#work-completed-modal-container').load('../includes/model/modals/work_completed_modal.html');
     $('#work-rejected-modal-container').load('../includes/model/modals/work_rejected_modal.html');
     $('#history-modal-container').load('../includes/model/modals/history_modal.html');
+
+    $('#arrival-modal-container').load('../includes/model/modals/arrival_modal.html');
 
     /* 
         Data Tables
@@ -65,80 +55,128 @@ $(document).ready(function () {
 
                     var resultObj = JSON.parse(result);
 
+                    var accessType = $('#access_type').text();
+
+                    // alert(accessType);
+
+
+                    // let response = "";
+                    
+                    // response += `<tr id='main-row-${resultObj['id']}'>`;
+                    // response +=  `<th scope='col'>${resultObj['id']}</th>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
+                    // response +=  `</tr>`;
+
+                    // let response = "<div class='row'><div class='col-sm-12 text-center my-auto'>Szczegółowe informacje</div></div>";
+                    
                     let response = "<div class='row'>" +
                         "<div class='col-sm-4 text-center my-auto'>";
                     
                     // FIRST COLUMN
 
-                    response += "<div class='btn-group-vertical'>";
 
-                    if(resultObj[0]['damage_image_url'] == null)
-                        response += "<button class='btn btn-primary' disabled>Wyświetl zdjęcie usterki</button>";
-                    else
-                        response += "<button class='btn btn-primary' onclick=\"showDamagePreview('" + resultObj[0]['damage_image_url'] + "')\">Wyświetl zdjęcie usterki</button>";
-
-                    response += "<button class='btn btn-primary mt-1' onclick=\"showHistory('" + rowId + "')\">Wyświetl historię zgłoszenia</button>";
+                    response += "<span><b>SZCZEGÓŁOWE INFORMACJE:</b></span>";
 
                     response += "</div>";
                     
-                    response += "</div>" +
-                                "<div class='col-sm-4 text-center my-auto'>"
+                    response += "<div class='col-sm-4 text-left my-auto'>"
 
-                    // SECOND COLUMN
+                    // // SECOND COLUMN
                     
-                    response += "<p><b>Wykonawca</b>: " + resultObj[0]['wykonawca'] + "</p>";
+                    response += "<div style='float: left;'>"
 
-                    if (resultObj[0]['status'] == 'new')
-                        response += "<button class='btn btn-primary' onclick=\"showAssignmentModal('" + rowId + "')\">Przypisz</button>";
+                    response += "<p><b>Zamówienie</b>: " + resultObj['orderDisplayValue'] + "</p>";
+                    response += "<p><b>Syntetyka</b>: " + resultObj['syntetykaDisplayValue'] + "</p>";
+                    response += "<p><b>MPK</b>: " + resultObj['mpkDisplayValue'] + "</p>";
+                    response += "<p><b>Koszt rodzajowy</b>: " + resultObj['costDisplayValue'] + "</p>";
+                    response += "<p><b>Projekt</b>: " + resultObj['projectDisplayValue'] + "</p>";
 
-                    if (resultObj[0]['status'] == 'assigned' || resultObj[0]['status'] == 'rejected')
-                        response += "<button class='btn btn-primary' onclick=\"startWork('" + rowId + "')\">Rozpocznij pracę</button>";
+                    response += "</div>";
 
-                    if (resultObj[0]['status'] == 'in_progress')
-                        response += "<button class='btn btn-primary' onclick=\"completeWork('" + rowId + "')\">Zakończ pracę</button>";
+                    response += "<div style='overflow: hidden; position: relative; left: 20px; word-wrap: break-word;'><p><b>Komentarz:</b></p>";
+                    response += "<p>" + resultObj['comment'] + "</p>";
 
-                    if (resultObj[0]['status'] == 'completed' || resultObj[0]['status'] == 'verified'|| resultObj[0]['status'] == 'closed')
-                        response += "<button class='btn btn-primary' onclick=\"showWorkPreview('" + resultObj[0]['work_image_url'] + "')\">Wyświetl zdjęcie wykonania</button>";
+                    response += "</div>";
+
+                    // if (resultObj[0]['status'] == 'new')
+                    //     response += "<button class='btn btn-primary' onclick=\"showAssignmentModal('" + rowId + "')\">Przypisz</button>";
+
+                    // if (resultObj[0]['status'] == 'assigned' || resultObj[0]['status'] == 'rejected')
+                    //     response += "<button class='btn btn-primary' onclick=\"startWork('" + rowId + "')\">Rozpocznij pracę</button>";
+
+                    // if (resultObj[0]['status'] == 'in_progress')
+                    //     response += "<button class='btn btn-primary' onclick=\"completeWork('" + rowId + "')\">Zakończ pracę</button>";
+
+                    // if (resultObj[0]['status'] == 'completed' || resultObj[0]['status'] == 'verified'|| resultObj[0]['status'] == 'closed')
+                    //     response += "<button class='btn btn-primary' onclick=\"showWorkPreview('" + resultObj[0]['work_image_url'] + "')\">Wyświetl zdjęcie wykonania</button>";
 
                     response +=
                         "</div>" +
                         "<div class='col-sm-4 text-center my-auto'>";
 
-                    // THIRD COLUMN
+                    // // THIRD COLUMN
+
+                        if (resultObj['status'] == 1 && accessType == 'ZAT')
+                            response += "<button class='btn btn-success' onclick=\"confirmWork('" + rowId + "')\">Zatwierdź</button>";
+
+                        if (resultObj['status'] == 2) {
+                            if(accessType == 'ZAM')
+                                response += "<p><button class='btn btn-success' onclick=\"showArrivalModal('" + rowId + "')\">Zamów</button></p>";
+                            response += "<p><b>Zatwierdził:</b>: " + resultObj['zatwierdzajacyDisplayName'] + "</p>";
+                            response += "<p><b>Czas zatwierdzenia:</b>: " + resultObj['czas_zatwierdzenia'] + "</p>";
+                        }
+
+                        if (resultObj['status'] == 3) {
+                            response += "<p><b>Zamówił:</b>: " + resultObj['zamawiajacyDisplayName'] + "</p>";
+                            response += "<p><b>Czas zamówienia:</b>: " + resultObj['czas_zamowienia'] + "</p>";
+                            response += "<p><b>Przybliżona data dostawy:</b>: " + resultObj['data_dostawy'] + "</p>";
+                        }
+                        
                     
-                    if (resultObj[0]['status'] == 'completed') {
-                        response += "<div class='btn-group-vertical'>";
-                        response += "<button class='btn btn-success mb-1' onclick=\"confirmWork('" + rowId + "')\">Zatwierdź</button>";
-                        response += "<button class='btn btn-danger' onclick=\"rejectWork('" + rowId + "')\">Przekaż / Zwróć</button>";
-                        response += "</div>";
-                    }
+                    // if (resultObj[0]['status'] == 'completed') {
+                    //     response += "<div class='btn-group-vertical'>";
+                    //     response += "<button class='btn btn-success mb-1' onclick=\"confirmWork('" + rowId + "')\">Zatwierdź</button>";
+                    //     response += "<button class='btn btn-danger' onclick=\"rejectWork('" + rowId + "')\">Przekaż / Zwróć</button>";
+                    //     response += "</div>";
+                    // }
 
-                    if(resultObj[0]['status'] == 'rejected')
-                        response += "<p class='text-break'><b>Powód</b>: " + resultObj[0]['rejected_reason'] + "</p>";
+                    // if(resultObj[0]['status'] == 'rejected')
+                    //     response += "<p class='text-break'><b>Powód</b>: " + resultObj[0]['rejected_reason'] + "</p>";
 
-                    if (resultObj[0]['status'] == 'verified') {
-                        response += "<button class='btn btn-danger' onclick=\"closeWorkOrder('" + rowId + "')\">Zamknij</button>";
-                    }
+                    // if (resultObj[0]['status'] == 'verified') {
+                    //     response += "<button class='btn btn-danger' onclick=\"closeWorkOrder('" + rowId + "')\">Zamknij</button>";
+                    // }
 
                     // PROCESSING SCRIPT
 
+                    let confirmStatus = 2; // NIE DZIAŁA ? CZEMU ?
+
                     response +=
                         "</div>" +
-                        // "<script>" +
+                        "<script>" +
                         // "function showDamagePreview() { $('#image-preview').attr('src', '" + resultObj[0]['damage_image_url'] + "'); $('#image-modal').modal('show'); }" +
-                        // "function showAssignmentModal() { $('#assignment_case_id').val('" + rowId + "'); $('#assign-modal').modal('show'); }" +
+                        "function showArrivalModal() { $('#arrival_case_id').val('" + rowId + "'); $('#arrival-modal').modal('show'); }" +
                         // "function startWork() { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: 'in_progress'}), success: " +
                         //     "(result) => { location.reload(); } }); };" +
                         // "function completeWork() { $('#work_completed_case_id').val('" + rowId + "'); $('#work-completed-modal').modal('show'); }" +
                         // "function showWorkPreview() { $('#image-preview').attr('src', '" + resultObj[0]['work_image_url'] + "'); $('#image-modal').modal('show'); }" +
-                        // "function confirmWork() { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: 'verified'}), success: (result) => { location.reload(); } }); }" +
+                        "function confirmWork() { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: " + confirmStatus + "}), success: (result) => { location.reload(); } }); }" +
                         // "function rejectWork() { $('#work_rejected_case_id').val('" + rowId + "'); $('#work-rejected-modal').modal('show'); }" +
                         // "function closeWorkOrder() { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: 'closed'}), success: " +
                         //     "(result) => { location.reload(); } }); };" +
                         // "function showHistory() { " +
                         //     "$('#input-timestamp').html('" + resultObj[0]['input_timestamp'] + "'); " +
                         //     "$('#history-modal').modal('show'); }" +
-                        // "</script>";
+                        "</script>";
 
                     resolve(response);
 
@@ -215,71 +253,6 @@ $(document).ready(function () {
         });
 
 
-    // Population of drop-downs based on previously selected values
-    $('#basic-addon-select-dzial').on('change', () => {
-
-        $('#basic-addon-select-poziom')
-            .find('option')
-            .remove()
-            .end()
-            .append($('<option>', {
-                value: '-',
-                text: '-- Wybierz --'
-            }));
-
-        $('#basic-addon-select-pomieszczenie')
-            .find('option')
-            .remove()
-            .end()
-            .append($('<option>', {
-                value: '-',
-                text: '-- Wybierz --'
-            }));
-
-        $('#basic-addon-select-device')
-            .find('option')
-            .remove()
-            .end()
-            .append($('<option>', {
-                value: '-',
-                text: '-- Wybierz --'
-            }));
-
-        loadPoziomy($('#basic-addon-select-dzial option:selected').text());
-
-    });
-
-    $('#basic-addon-select-poziom').on('change', () => {
-
-        $('#basic-addon-select-pomieszczenie')
-            .find('option')
-            .remove()
-            .end()
-            .append($('<option>', {
-                value: '-',
-                text: '-- Wybierz --'
-            }));
-
-        loadPomieszczenia($('#basic-addon-select-dzial option:selected').text(), $('#basic-addon-select-poziom').val());
-
-    });
-
-    $('#basic-addon-select-pomieszczenie').on('change', () => {
-
-        $('#basic-addon-select-device')
-            .find('option')
-            .remove()
-            .end()
-            .append($('<option>', {
-                value: '-',
-                text: '-- Wybierz --'
-            }));
-
-        loadDevices($('#basic-addon-select-dzial').val(), $('#basic-addon-select-pomieszczenie').val());
-
-    });
-
-
 });
 
 function loadDevices(dzial_code, pomieszczenie) {
@@ -310,70 +283,5 @@ function loadDevices(dzial_code, pomieszczenie) {
 
     })
 
-
-}
-
-function loadPomieszczenia(dzial, poziom) {
-
-    $.ajax({
-
-        type: "GET",
-        url: "../server/server_pomieszczenia.php",
-        // dataType: 'json',
-        data: ({ dzial: dzial, poziom: poziom }),
-        success: function (result) {
-
-            if (result != '') {
-
-                var resultObj = JSON.parse(result);
-
-                resultObj.forEach((pomieszczenie) => {
-
-                    $('#basic-addon-select-pomieszczenie').append($('<option>', {
-                        value: pomieszczenie,
-                        text: pomieszczenie
-                    }));
-
-                });
-
-            }
-
-        }
-
-    })
-
-}
-
-function loadPoziomy(dzial) {
-
-    $.ajax({
-
-        type: "GET",
-        url: "../server/server_poziomy.php",
-        data: "dzial=" + dzial,
-        success: function (result) {
-
-            if (result != '') {
-
-                var resultObj = JSON.parse(result);
-
-                $('#basic-addon-select-poziom').prop('disabled', resultObj[0] == '-');
-                if (resultObj[0] == '-')
-                    loadPomieszczenia(dzial, resultObj[0]);
-
-                resultObj.forEach((poziom) => {
-
-                    $('#basic-addon-select-poziom').append($('<option>', {
-                        value: poziom,
-                        text: poziom
-                    }));
-
-                });
-
-            }
-
-        }
-
-    })
 
 }

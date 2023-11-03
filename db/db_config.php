@@ -11,9 +11,9 @@ class Dbconfig
     public function __construct()
     {
         $this->serverName = 'localhost';
-        $this->userName = 'lesnik_connector';
-        $this->passCode = '**RDZoR9V*k12X';
-        $this->dbName = 'lesnik';
+        $this->userName = 'ligwan-rzn-connector';
+        $this->passCode = 'PrrQHAbd1JzhDasH';
+        $this->dbName = 'ligwan-rzn';
     }
 
     /**

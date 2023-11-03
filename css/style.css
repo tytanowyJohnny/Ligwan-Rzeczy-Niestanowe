@@ -1,12 +1,12 @@
 body {
 
-    background-color: #e0faa2;
+    background-color: #79b0df;
 
 }
 
 .form-background {
 
-    background-color: #d4f781;
+    background-color: #29166f;
     border-radius: 20px;
 
 }
@@ -29,4 +29,8 @@ ul {
 
 .invisible {
     display: none;
+}
+
+.form-header {
+    color: white;
 }
