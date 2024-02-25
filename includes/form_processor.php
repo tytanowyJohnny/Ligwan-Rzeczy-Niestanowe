@@ -35,22 +35,29 @@
     $isValid_amount = isset($_POST['input-amount']);
     $isValid_comment = isset($_POST['input-comment']);
 
-    // echo $isValid_order;
-    // echo $isValid_link;
-    // echo $isValid_syntetyka;
-    // echo $isValid_mpk;
-    // echo $isValid_cost;
-    // echo $isValid_project;
-    // echo $isValid_amount;
-    // echo $isValid_comment;
-
 
     if ($isValid_order && $isValid_link && $isValid_syntetyka && $isValid_mpk && $isValid_cost && $isValid_project && $isValid_amount && $isValid_comment) {
 
-        // echo $_POST['input-cost'];
+        // Attachment
+
+        //The path you wish to upload the image to
+        $imagePath = "upload/pdf/";
+        //Stores the tempname as it is given by the host when uploaded.
+        $imagetemp = $_FILES['input-file-pdf']['tmp_name'];
+        //Stores the filename as it was on the client computer.
+        $imagename = $_FILES['input-file-pdf']['name'];
+    
+        $fullImagePath = $imagePath . $imagename;
+
+        if (is_uploaded_file($imagetemp)) {
+            move_uploaded_file($imagetemp, "../" . $fullImagePath);
+        }
+
 
         // Compose query
-        $insertQuery = "INSERT INTO `zgloszenia` (`created_by`, `czas_wprowadzenie`, `zamowienie`, `link`, `syntetyka`, `mpk`, `podmiot`, `cost`, `project`, `amount`, `comment`)
+        $insertQuery = "INSERT INTO `zgloszenia` (`created_by`, `czas_wprowadzenie`, `zamowienie`, `link`, 
+                                                    `syntetyka`, `mpk`, `podmiot`, `cost`, `project`, `amount`, 
+                                                    `comment`, `attachment_uri`)
                     VALUES (
                         '" . $user->getUsername() . "',
                         NOW(),
@@ -62,9 +69,10 @@
                         '" . $_POST['input-cost'] . "',
                         '" . $_POST['input-project'] . "',
                         '" . $_POST['input-amount'] . "',
-                        '" . $_POST['input-comment'] . "')";
+                        '" . $_POST['input-comment'] . "',
+                        '" . $fullImagePath . "')";
 
-        // echo $insertQuery;
+        echo $insertQuery;
 
 
         // Write to DB
@@ -79,6 +87,7 @@
 
         // Whatever happens, redirect to main page
         header('Location: ../index.php');
+        
     }
 
     ?>

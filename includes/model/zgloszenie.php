@@ -32,8 +32,13 @@ class Zgloszenie {
     protected $_czas_zamowienia;
     protected $_data_dostawy;
 
+    protected $_attachment_uri;
 
-    public function __construct($_id, $_created_by, $_czas_wprowadzenie, $_order, $_link, $_syntetyka, $_mpk, $_podmiot, $_cost, $_project, $_amount, $_comment, $_status, $_zatwierdzajacy, $_czas_zatwierdzenia, $_zamawiajacy, $_czas_zamowienia, $_data_dostawy) {
+
+    public function __construct(
+        $_id, $_created_by, $_czas_wprowadzenie, $_order, $_link, $_syntetyka, $_mpk, 
+        $_podmiot, $_cost, $_project, $_amount, $_comment, $_status, $_zatwierdzajacy, 
+        $_czas_zatwierdzenia, $_zamawiajacy, $_czas_zamowienia, $_data_dostawy, $_attachment_uri) {
 
 
         $this->_id = $_id;
@@ -54,6 +59,7 @@ class Zgloszenie {
         $this->_czas_zamowienia = $_czas_zamowienia;
         $this->_data_dostawy = $_data_dostawy;
         $this->_zatwierdzajacy = $_zatwierdzajacy;
+        $this->_attachment_uri = $_attachment_uri;
 
     }
 
@@ -145,27 +151,27 @@ class Zgloszenie {
 
     }
 
-    public function getOrderDisplayValue() {
+    // public function getOrderDisplayValue() {
 
-        $query = "SELECT `label` FROM `mpk` WHERE `value`='".$this->_order."'";
+    //     $query = "SELECT `label` FROM `mpk` WHERE `value`='".$this->_order."'";
 
-        $db = new Mysql;
+    //     $db = new Mysql;
 
-        $db->dbConnect();
+    //     $db->dbConnect();
 
-        $result = $db->performQuery($query);
+    //     $result = $db->performQuery($query);
 
-        if ($row = $result->fetch_assoc()) {
+    //     if ($row = $result->fetch_assoc()) {
 
-            $db->dbDisconnect();
-            return $row['label'];
-        }
+    //         $db->dbDisconnect();
+    //         return $row['label'];
+    //     }
 
-        $db->dbDisconnect();
+    //     $db->dbDisconnect();
 
-        return false;
+    //     return false;
 
-    }
+    // }
 
     
     public function getMPKDisplayValue() {
@@ -617,6 +623,26 @@ class Zgloszenie {
     public function set_zatwierdzajacy($_zatwierdzajacy)
     {
         $this->_zatwierdzajacy = $_zatwierdzajacy;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of _attachment_uri
+     */ 
+    public function get_attachment_uri()
+    {
+        return $this->_attachment_uri;
+    }
+
+    /**
+     * Set the value of _attachment_uri
+     *
+     * @return  self
+     */ 
+    public function set_attachment_uri($_attachment_uri)
+    {
+        $this->_attachment_uri = $_attachment_uri;
 
         return $this;
     }

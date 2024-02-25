@@ -84,8 +84,17 @@ $(document).ready(function () {
                     // FIRST COLUMN
 
 
-                    response += "<span><b>SZCZEGÓŁOWE INFORMACJE:</b></span>";
+                    response += "<div class='btn-group-vertical'>";
 
+                    // alert(resultObj['attachment_uri']);
+
+                    if(resultObj['attachment_uri'] == null)
+                        response += "<button class='btn btn-primary' disabled>Wyświetl PDF</button>";
+                    else
+                        response += "<button class='btn btn-primary' onclick=\"window.open('" + resultObj['attachment_uri'] + "')\">Wyświetl PDF</button>";
+
+                    response += "</div>";
+                    
                     response += "</div>";
                     
                     response += "<div class='col-sm-4 text-left my-auto'>"
@@ -94,7 +103,7 @@ $(document).ready(function () {
                     
                     response += "<div style='float: left;'>"
 
-                    response += "<p><b>Zamówienie</b>: " + resultObj['orderDisplayValue'] + "</p>";
+                    response += "<p><b>Zamówienie</b>: " + resultObj['order'] + "</p>";
                     response += "<p><b>Syntetyka</b>: " + resultObj['syntetykaDisplayValue'] + "</p>";
                     response += "<p><b>MPK</b>: " + resultObj['mpkDisplayValue'] + "</p>";
                     response += "<p><b>Koszt rodzajowy</b>: " + resultObj['costDisplayValue'] + "</p>";
@@ -131,8 +140,8 @@ $(document).ready(function () {
                         if (resultObj['status'] == 2) {
                             if(accessType == 'ZAM')
                                 response += "<p><button class='btn btn-success' onclick=\"showArrivalModal('" + rowId + "')\">Zamów</button></p>";
-                            response += "<p><b>Zatwierdził:</b>: " + resultObj['zatwierdzajacyDisplayName'] + "</p>";
-                            response += "<p><b>Czas zatwierdzenia:</b>: " + resultObj['czas_zatwierdzenia'] + "</p>";
+                            response += "<p><b>Zatwierdził:</b> " + resultObj['zatwierdzajacyDisplayName'] + "</p>";
+                            response += "<p><b>Czas zatwierdzenia:</b> " + resultObj['czas_zatwierdzenia'] + "</p>";
                         }
 
                         if (resultObj['status'] == 3) {
@@ -183,7 +192,7 @@ $(document).ready(function () {
                 },
                 error: (err) => {
 
-                    reject('getRowInfo Error: ' + err);
+                    reject('getRowInfo Error: ' + JSON.stringify(err));
                 }
 
             })

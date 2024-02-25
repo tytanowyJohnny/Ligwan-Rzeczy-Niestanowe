@@ -25,12 +25,16 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
 
         if ($row) {
 
-            $tempZgloszenie = new Zgloszenie($row['id'], $row['created_by'], $row['czas_wprowadzenie'], $row['zamowienie'], $row['link'], $row['syntetyka'], $row['mpk'], $row['podmiot'], $row['cost'], $row['project'], $row['amount'], $row['comment'], $row['status'], $row['zatwierdzajacy'], $row['czas_zatwierdzenia'], $row['zamawiajacy'], $row['czas_zamowienia'], $row['data_dostawy']);
+            $tempZgloszenie = new Zgloszenie(
+                $row['id'], $row['created_by'], $row['czas_wprowadzenie'], $row['zamowienie'], 
+                $row['link'], $row['syntetyka'], $row['mpk'], $row['podmiot'], $row['cost'], 
+                $row['project'], $row['amount'], $row['comment'], $row['status'], $row['zatwierdzajacy'], 
+                $row['czas_zatwierdzenia'], $row['zamawiajacy'], $row['czas_zamowienia'], $row['data_dostawy'], $row['attachment_uri']);
             
             $info->id = $tempZgloszenie->get_id();
             $info->czas_wprowadzenie = $tempZgloszenie->get_czas_wprowadzenie();
             $info->order = $tempZgloszenie->get_order();
-            $info->orderDisplayValue = $tempZgloszenie->getOrderDisplayValue();
+            // $info->orderDisplayValue = $tempZgloszenie->getOrderDisplayValue();
             $info->link = $tempZgloszenie->get_link();
             $info->syntetyka = $tempZgloszenie->get_syntetyka();
             $info->syntetykaDisplayValue = $tempZgloszenie->getSyntetykaDisplayValue();
@@ -50,6 +54,7 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
             $info->zamawiajacyDisplayName = $tempZgloszenie->getZamawiającyDisplayName();
             $info->czas_zamowienia = $tempZgloszenie->get_czas_zamowienia();
             $info->data_dostawy = $tempZgloszenie->get_data_dostawy();
+            $info->attachment_uri = $tempZgloszenie->get_attachment_uri();
 
             // array_push($rowInfo, $info);
         }

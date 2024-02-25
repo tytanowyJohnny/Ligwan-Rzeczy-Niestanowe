@@ -86,84 +86,6 @@ if (!isset($_SESSION['user_object'])) {
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4">
                     <div class="input-group has-validation mb-3">
-                        <span class="input-group-text" id="basic-addon1">Zamówienie</span>
-                        <select name="input-order" class="form-select" id="basic-addon-select-order" required>
-                            <option selected disabled value="">-- Wybierz --</option>
-
-                            <?php
-
-
-                            $db = new Mysql;
-
-                            $db->dbConnect();
-
-                            $result = $db->performQuery("SELECT * FROM `mpk`");
-
-                            while ($row = $result->fetch_assoc()) {
-
-                                echo "<option value='" . $row['value'] . "'>" . $row['label'] . "</option>";
-                            }
-
-                            $db->dbDisconnect();
-
-
-                            ?>
-
-
-                        </select>
-                        <div class="invalid-feedback">
-                            To pole jest wymagane
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="input-group has-validation mb-3">
-                        <span class="input-group-text" id="basic-addon1">Link</span>
-                        <input type="text" id="input-link" name="input-link" class="form-control">
-                        <div class="invalid-feedback">
-                            To pole jest wymagane
-                        </div>
-                    </div>
-                </div>
-                <!-- <div class="col-sm-4">
-                    <div class="input-group has-validation mb-3">
-                        <span class="input-group-text" id="basic-addon2">Status</span>
-                        <select name="input-status" class="form-select" id="basic-addon-select-status" required readonly>
-                            <option selected value="new">Nowy</option>
-
-                            <?php
-
-
-                            // $db = new Mysql;
-
-                            // $db->dbConnect();
-
-                            // $result = $db->performQuery("SELECT * FROM `statusy`");
-
-                            // while ($row = $result->fetch_assoc()) {
-
-                            //     echo "<option value='" . $row['value'] . "'>" . $row['label'] . "</option>";
-                            // }
-
-                            // $db->dbDisconnect();
-
-
-                            ?>
-                        </select>
-                        <div class="invalid-feedback">
-                            To pole jest wymagane
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-2"></div> -->
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-sm-2"></div>
-                <div class="col-sm-4">
-                    <div class="input-group has-validation mb-3">
                         <span class="input-group-text" id="basic-addon3">Syntetyka</span>
                         <select name="input-syntetyka" class="form-select" id="basic-addon-select-syntetyka" required>
                             <option selected disabled value="">-- Wybierz --</option>
@@ -179,13 +101,59 @@ if (!isset($_SESSION['user_object'])) {
 
                             while ($row = $result->fetch_assoc()) {
 
-                                echo "<option value='" . $row['value'] . "'>" . $row['label'] . "</option>";
+                                echo "<option value='" . $row['value'] . "'>" . $row['value'] . " - " . $row['label'] . "</option>";
                             }
 
                             $db->dbDisconnect();
 
 
                             ?>
+                        </select>
+                        <div class="invalid-feedback">
+                            To pole jest wymagane
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="input-group has-validation mb-3">
+                        <span class="input-group-text" id="basic-addon1">Link</span>
+                        <input type="text" id="input-link" name="input-link" class="form-control">
+                        <div class="invalid-feedback">
+                            To pole jest wymagane
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4">
+                    <div class="input-group has-validation mb-3">
+                        <span class="input-group-text" id="basic-addon3">Kontrahent</span>
+                        <select name="input-podmiot" class="form-control selectpicker" id="basic-addon-select-podmiot" data-live-search="true" required>
+                            <option selected disabled value="">-- Wybierz --</option>
+
+                            
+                            <?php
+
+
+                            $db = new Mysql;
+
+                            $db->dbConnect();
+
+                            $result = $db->performQuery("SELECT * FROM `podmioty` WHERE `active`=1");
+
+                            while ($row = $result->fetch_assoc()) {
+
+                                echo "<option value='" . $row['ident'] . "' data-tokens='". $row['name'] ."'>" . $row['name'] . "</option>";
+                            }
+
+                            $db->dbDisconnect();
+
+
+                            ?>
+
                         </select>
                         <div class="invalid-feedback">
                             To pole jest wymagane
@@ -231,11 +199,10 @@ if (!isset($_SESSION['user_object'])) {
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4">
                     <div class="input-group has-validation mb-3">
-                        <span class="input-group-text" id="basic-addon3">Kontrahent</span>
-                        <select name="input-podmiot" class="form-control selectpicker" id="basic-addon-select-podmiot" data-live-search="true" required>
+                        <span class="input-group-text" id="basic-addon3">Projekt</span>
+                        <select name="input-project" class="form-select" id="basic-addon-select-project" required>
                             <option selected disabled value="">-- Wybierz --</option>
 
-                            
                             <?php
 
 
@@ -243,11 +210,11 @@ if (!isset($_SESSION['user_object'])) {
 
                             $db->dbConnect();
 
-                            $result = $db->performQuery("SELECT * FROM `podmioty` WHERE `active`=1");
+                            $result = $db->performQuery("SELECT * FROM `projects`");
 
                             while ($row = $result->fetch_assoc()) {
 
-                                echo "<option value='" . $row['ident'] . "' data-tokens='". $row['name'] ."'>" . $row['name'] . "</option>";
+                                echo "<option value='" . $row['value'] . "'>" . $row['label'] . "</option>";
                             }
 
                             $db->dbDisconnect();
@@ -308,37 +275,6 @@ if (!isset($_SESSION['user_object'])) {
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4">
                     <div class="input-group has-validation mb-3">
-                        <span class="input-group-text" id="basic-addon3">Projekt</span>
-                        <select name="input-project" class="form-select" id="basic-addon-select-project" required>
-                            <option selected disabled value="">-- Wybierz --</option>
-
-                            <?php
-
-
-                            $db = new Mysql;
-
-                            $db->dbConnect();
-
-                            $result = $db->performQuery("SELECT * FROM `projects`");
-
-                            while ($row = $result->fetch_assoc()) {
-
-                                echo "<option value='" . $row['value'] . "'>" . $row['label'] . "</option>";
-                            }
-
-                            $db->dbDisconnect();
-
-
-                            ?>
-
-                        </select>
-                        <div class="invalid-feedback">
-                            To pole jest wymagane
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="input-group has-validation mb-3">
                         <span class="input-group-text" id="basic-addon1">Ilość</span>
                         <input type="number" step="1" id="input-amount" name="input-amount" class="form-control">
                         <div class="invalid-feedback">
@@ -346,7 +282,39 @@ if (!isset($_SESSION['user_object'])) {
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-4">
+                    <div class="input-group has-validation mb-3">
+                        <span class="input-group-text" id="basic-addon1">Zamówienie</span>
+                        <input type="text" id="input-order" name="input-order" class="form-control">
+                        <div class="invalid-feedback">
+                            To pole jest wymagane
+                        </div>
+                    </div>
+                </div>
                 <div class="col-sm-2"></div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4">
+                    <div class="input-group mb-3">
+                        <!-- <span class="input-group-text" id="basic-addon1">Załącznik</span> -->
+                        <input name="input-file-pdf" accept="application/pdf" class="form-control" type="file"
+                            id="input-file-pdf">
+                    </div>
+                </div>
+                <!-- <div class="col-sm-4">
+                    <div class="input-group has-validation mb-3">
+                        <span class="input-group-text" id="basic-addon1">Data dostawy</span>
+                        <input type="date" id="input-arrival-date" name="input-arrival-date" class="form-control">
+                        <div class="invalid-feedback">
+                            To pole jest wymagane
+                        </div>
+                    </div>
+                </div> -->
+                <div class="col-sm-2"></div>                
 
             </div>
 
@@ -390,14 +358,13 @@ if (!isset($_SESSION['user_object'])) {
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Data zlecenia</th>
-                    <th scope="col">Zlecajacy</th>
-                    <th scope="col">Zamówienie</th>
-                    <th scope="col">Link</th>
+                    <th scope="col">Zlecający</th>
                     <th scope="col">Syntetyka</th>
                     <th scope="col">MPK</th>
                     <th scope="col">Kontrahent</th>
                     <th scope="col">Koszt rodzajowy</th>
                     <th scope="col">Projekt</th>
+                    <th scope="col">Link</th>
                     <th scope="col">Ilość</th>
                     <th scope="col">Status</th>
                 </tr>
@@ -418,19 +385,22 @@ if (!isset($_SESSION['user_object'])) {
                 while ($row = $result->fetch_assoc()) {
 
                     // Generate object
-                    $obj = new Zgloszenie($row['id'], $row['created_by'], $row['czas_wprowadzenie'], $row['zamowienie'], $row['link'], $row['syntetyka'], $row['mpk'], $row['podmiot'], $row['cost'], $row['project'], $row['amount'], $row['comment'], $row['status'], $row['zatwierdzajacy'], $row['czas_zatwierdzenia'], $row['zamawiajacy'], $row['czas_zamowienia'], $row['data_dostawy']);
+                    $obj = new Zgloszenie(
+                        $row['id'], $row['created_by'], $row['czas_wprowadzenie'], $row['zamowienie'], $row['link'], 
+                        $row['syntetyka'], $row['mpk'], $row['podmiot'], $row['cost'], $row['project'], $row['amount'], 
+                        $row['comment'], $row['status'], $row['zatwierdzajacy'], $row['czas_zatwierdzenia'], $row['zamawiajacy'], 
+                        $row['czas_zamowienia'], $row['data_dostawy'], $row['attachment_uri']);
 
                     echo "<tr id='main-row-" . $obj->get_id() . "'>";
                     echo "<th scope='col'>" . $obj->get_id() . "</th>";
                     echo "<td>" . $obj->get_czas_wprowadzenie() . "</td>";
                     echo "<td>" . $obj->getCreateByDisplayName() . "</td>";
-                    echo "<td>" . $obj->get_order() . "</td>";
-                    echo "<td>" . $obj->get_link() . "</td>";
                     echo "<td>" . $obj->get_syntetyka() . "</td>";
                     echo "<td>" . $obj->get_mpk() . "</td>";
                     echo "<td>" . $obj->getPodmiotDisplayValue() . "</td>";
                     echo "<td>" . $obj->get_cost() . "</td>";
                     echo "<td>" . $obj->get_project() . "</td>";
+                    echo "<td><a href='" . $obj->get_link() . "' target='_blank'>" . $obj->get_link() . "</a></td>";
                     echo "<td>" . $obj->get_amount() . "</td>";
                     echo "<td>" . $obj->getStatusDisplayValue() . "</td>";
                     echo "</tr>";
