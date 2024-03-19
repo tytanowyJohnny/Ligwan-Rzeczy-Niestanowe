@@ -23,14 +23,17 @@ $(document).ready(function () {
     $('#work-completed-modal-container').load('../includes/model/modals/work_completed_modal.html');
     $('#work-rejected-modal-container').load('../includes/model/modals/work_rejected_modal.html');
     $('#history-modal-container').load('../includes/model/modals/history_modal.html');
-
     $('#arrival-modal-container').load('../includes/model/modals/arrival_modal.html');
+    $('#work-acceptance-modal-container').load('../includes/model/modals/work_acceptance_modal.html');
 
     /* 
         Data Tables
                         */
 
     let mainTable = new DataTable('#mainTable', {
+        "responsive": true,
+        "processing": true,
+        "serverSide": true,
         "order": [[1, 'desc']],
         "language": {
             "lengthMenu": "Pokaż _MENU_ zgłoszeń na stronie",
@@ -39,7 +42,24 @@ $(document).ready(function () {
             "infoEmpty": "Brak zgłoszeń",
             "infoFiltered": "(filtrowane z _MAX_ wszystkich zgłoszeń)",
             "search": "Wyszukaj"
-        }
+        },
+        "ajax": {
+            url: "../server/server_compact_rows.php",
+            type: "POST"
+        },
+        "columns": [
+            { data: 'id' },
+            { data: 'czas_wprowadzenie' },
+            { data: 'createdByDisplayName' },
+            { data: 'syntetyka' },
+            { data: 'mpk' },
+            { data: 'podmiotDisplayValue' },
+            { data: 'cost' },
+            { data: 'project' },
+            { data: 'link' },
+            { data: 'amount' },
+            { data: 'statusDisplayValue' }
+        ]
     });
 
     function getRowInfo(rowId) {
@@ -53,60 +73,43 @@ $(document).ready(function () {
                 data: ({ rowId: rowId }),
                 success: (result) => {
 
+
                     var resultObj = JSON.parse(result);
 
-                    var accessType = $('#access_type').text();
-
-                    // alert(accessType);
-
-
-                    // let response = "";
-                    
-                    // response += `<tr id='main-row-${resultObj['id']}'>`;
-                    // response +=  `<th scope='col'>${resultObj['id']}</th>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `<td>${resultObj['czas_wprowadzenie']}</td>`;
-                    // response +=  `</tr>`;
-
-                    // let response = "<div class='row'><div class='col-sm-12 text-center my-auto'>Szczegółowe informacje</div></div>";
-                    
                     let response = "<div class='row'>" +
                         "<div class='col-sm-4 text-center my-auto'>";
-                    
-                    // FIRST COLUMN
 
+                    // FIRST COLUMN
 
                     response += "<div class='btn-group-vertical'>";
 
                     // alert(resultObj['attachment_uri']);
 
-                    if(resultObj['attachment_uri'] == null)
+                    if (resultObj['attachment_uri'] == null)
                         response += "<button class='btn btn-primary' disabled>Wyświetl PDF</button>";
                     else
                         response += "<button class='btn btn-primary' onclick=\"window.open('" + resultObj['attachment_uri'] + "')\">Wyświetl PDF</button>";
 
+                    response += "<button class='btn btn-primary mt-1' onclick=\"showHistory()\">Wyświetl historię</button>";
+
                     response += "</div>";
-                    
+
                     response += "</div>";
-                    
+
                     response += "<div class='col-sm-4 text-left my-auto'>"
 
                     // // SECOND COLUMN
-                    
+
                     response += "<div style='float: left;'>"
 
-                    response += "<p><b>Zamówienie</b>: " + resultObj['order'] + "</p>";
+                    let mpkDisplayValue = (resultObj['mpkDisplayValue']) ? resultObj['mpkDisplayValue'] : '-';
+                    let costDisplayValue = (resultObj['costDisplayValue']) ? resultObj['costDisplayValue'] : '-';
+
+                    response += "<p><b>Dział</b>: " + resultObj['assignedDepartmentDisplayValue'] + "</p>";
+                    //response += "<p><b>Zamówienie</b>: " + resultObj['order'] + "</p>";
                     response += "<p><b>Syntetyka</b>: " + resultObj['syntetykaDisplayValue'] + "</p>";
-                    response += "<p><b>MPK</b>: " + resultObj['mpkDisplayValue'] + "</p>";
-                    response += "<p><b>Koszt rodzajowy</b>: " + resultObj['costDisplayValue'] + "</p>";
+                    response += "<p><b>MPK</b>: " + mpkDisplayValue + "</p>";
+                    response += "<p><b>Koszt rodzajowy</b>: " + costDisplayValue + "</p>";
                     response += "<p><b>Projekt</b>: " + resultObj['projectDisplayValue'] + "</p>";
 
                     response += "</div>";
@@ -130,61 +133,61 @@ $(document).ready(function () {
 
                     response +=
                         "</div>" +
-                        "<div class='col-sm-4 text-center my-auto'>";
+                        "<div class='col-sm-4 text-center my-auto'>" +
+                        "<div class='btn-group-vertical'>";
 
                     // // THIRD COLUMN
 
-                        if (resultObj['status'] == 1 && accessType == 'ZAT')
-                            response += "<button class='btn btn-success' onclick=\"confirmWork('" + rowId + "')\">Zatwierdź</button>";
+                    resultObj['validTransitions'].forEach(($validTransition) => {
 
-                        if (resultObj['status'] == 2) {
-                            if(accessType == 'ZAM')
-                                response += "<p><button class='btn btn-success' onclick=\"showArrivalModal('" + rowId + "')\">Zamów</button></p>";
-                            response += "<p><b>Zatwierdził:</b> " + resultObj['zatwierdzajacyDisplayName'] + "</p>";
-                            response += "<p><b>Czas zatwierdzenia:</b> " + resultObj['czas_zatwierdzenia'] + "</p>";
+                        switch ($validTransition['target_status']) {
+
+                            case '3': // AKCEPTACJA
+
+                                if(resultObj['mpkDisplayValue'] && resultObj['costDisplayValue'])
+                                    response += "<button class='btn btn-success m-1' onclick=\"changeState('" + $validTransition['target_status'] + "')\">" + $validTransition['action_name'] + "</button>";
+                                else
+                                    response += "<button class='btn btn-success m-1' onclick=\"acceptWork(" + (resultObj['mpkDisplayValue'] != false) + ", " + (resultObj['costDisplayValue'] != false) + ")\">" + $validTransition['action_name'] + "</button>";
+                                break;
+
+                            case '4': // ZATWIERDZANIE
+                                response += "<button class='btn btn-success m-1' onclick=\"changeState('" + $validTransition['target_status'] + "')\">" + $validTransition['action_name'] + "</button>";
+                                break;
+
+                            case '2': // ODRZUCENIE
+                                response += "<button class='btn btn-danger m-1' onclick=\"rejectWork()\">" + $validTransition['action_name'] + "</button>";
+                                break;
+
+                            case '5': // ZAMAWIANIE
+                                response += "<button class='btn btn-success m-1' onclick=\"showArrivalModal('" + rowId + "')\">" + $validTransition['action_name'] + "</button>";
+                                break;
+
+                            case '1': // POPRAWAIANIE
+                                response += "<button class='btn btn-success m-1' onclick=\"processFromExisting()\">" + $validTransition['action_name'] + "</button>";
+                                break;
+
+
                         }
 
-                        if (resultObj['status'] == 3) {
-                            response += "<p><b>Zamówił:</b>: " + resultObj['zamawiajacyDisplayName'] + "</p>";
-                            response += "<p><b>Czas zamówienia:</b>: " + resultObj['czas_zamowienia'] + "</p>";
-                            response += "<p><b>Przybliżona data dostawy:</b>: " + resultObj['data_dostawy'] + "</p>";
-                        }
-                        
-                    
-                    // if (resultObj[0]['status'] == 'completed') {
-                    //     response += "<div class='btn-group-vertical'>";
-                    //     response += "<button class='btn btn-success mb-1' onclick=\"confirmWork('" + rowId + "')\">Zatwierdź</button>";
-                    //     response += "<button class='btn btn-danger' onclick=\"rejectWork('" + rowId + "')\">Przekaż / Zwróć</button>";
-                    //     response += "</div>";
-                    // }
+                    });
 
-                    // if(resultObj[0]['status'] == 'rejected')
-                    //     response += "<p class='text-break'><b>Powód</b>: " + resultObj[0]['rejected_reason'] + "</p>";
+                    response += "</div>";
 
-                    // if (resultObj[0]['status'] == 'verified') {
-                    //     response += "<button class='btn btn-danger' onclick=\"closeWorkOrder('" + rowId + "')\">Zamknij</button>";
                     // }
 
                     // PROCESSING SCRIPT
 
-                    let confirmStatus = 2; // NIE DZIAŁA ? CZEMU ?
-
                     response +=
                         "</div>" +
                         "<script>" +
-                        // "function showDamagePreview() { $('#image-preview').attr('src', '" + resultObj[0]['damage_image_url'] + "'); $('#image-modal').modal('show'); }" +
+                        "function post(path, parameters) { var form = $('<form></form>'); form.attr('method', 'post'); form.attr('action', path); $.each(parameters, function (key, value) { var field = $('<input></input>'); field.attr('type', 'hidden'); field.attr('name', key); field.attr('value', value); form.append(field); }); $(document.body).append(form); form.submit(); }" +
+                        "function populateSelectOptions(selectId, optionsArr) { $.each(optionsArr, function(key, value) { $(selectId).append($('<option></option>').attr('value', value.value).text(value.label)); }); }" +
                         "function showArrivalModal() { $('#arrival_case_id').val('" + rowId + "'); $('#arrival-modal').modal('show'); }" +
-                        // "function startWork() { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: 'in_progress'}), success: " +
-                        //     "(result) => { location.reload(); } }); };" +
-                        // "function completeWork() { $('#work_completed_case_id').val('" + rowId + "'); $('#work-completed-modal').modal('show'); }" +
-                        // "function showWorkPreview() { $('#image-preview').attr('src', '" + resultObj[0]['work_image_url'] + "'); $('#image-modal').modal('show'); }" +
-                        "function confirmWork() { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: " + confirmStatus + "}), success: (result) => { location.reload(); } }); }" +
-                        // "function rejectWork() { $('#work_rejected_case_id').val('" + rowId + "'); $('#work-rejected-modal').modal('show'); }" +
-                        // "function closeWorkOrder() { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: 'closed'}), success: " +
-                        //     "(result) => { location.reload(); } }); };" +
-                        // "function showHistory() { " +
-                        //     "$('#input-timestamp').html('" + resultObj[0]['input_timestamp'] + "'); " +
-                        //     "$('#history-modal').modal('show'); }" +
+                        "function acceptWork(hasMPK, hasCost) { $.ajax({ type: 'GET', url: '../server/server_get_missing_details.php', success: (result) => { $('#accepted_case_id').val('" + rowId + "'); let resultObj = JSON.parse(result); populateSelectOptions('#modal-input-mpk', resultObj[0]); populateSelectOptions('#modal-input-cost', resultObj[1]); if(hasMPK) { $('#input-group-mpk').remove(); } if(hasCost) { $('#input-group-cost').remove(); } $('#work-acceptance-modal').modal('show'); } }); }" +
+                        "function changeState(targetStatus) { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: targetStatus}), success: (result) => { location.reload(); } }); }" +
+                        "function processFromExisting() { post('../index.php', {load_case_id: " + rowId + "}); }" +
+                        "function rejectWork() { $('#work_rejected_case_id').val('" + rowId + "'); $('#work-rejected-modal').modal('show'); }" +
+                        "function showHistory() { $.ajax({ type: 'GET', url: '../server/server_get_history.php', data: ({rowId: " + rowId + "}), success: (result) => { $('#history-modal-body').html(result); $('#history-modal').modal('show'); } }); }" +
                         "</script>";
 
                     resolve(response);
@@ -230,8 +233,9 @@ $(document).ready(function () {
                 }
             });
             // Open this row
+
             // Wait for db
-            getRowInfo(row.data()[0]).then((info) => {
+            getRowInfo(row.data()['id']).then((info) => {
 
                 row.child(info).show();
 

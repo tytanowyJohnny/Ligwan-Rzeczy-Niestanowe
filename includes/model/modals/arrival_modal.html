@@ -14,6 +14,13 @@
                             disabled>
                     </div>
                     <div class="input-group has-validation mb-3">
+                        <span class="input-group-text" id="basic-addon3">Zamówienie</span>
+                        <input type="text" id="input-order-number" name="input-order-number" required>
+                        <div class="invalid-feedback">
+                            Musisz wprowadzić numer zamówienia
+                        </div>
+                    </div>
+                    <div class="input-group has-validation mb-3">
                         <span class="input-group-text" id="basic-addon3">Przewidywana data dostawy</span>
                         <input type="date" id="input-arrival-date" name="input-arrival-date" required>
                         <div class="invalid-feedback">
@@ -47,6 +54,7 @@
         } else {
 
             // Handle assign input
+            let orderNumber = $('#input-order-number').val();
             let arrivalDateValue = $('#input-arrival-date').val();
             let caseId = $('#arrival_case_id').val();
 
@@ -54,7 +62,7 @@
 
                 type: "GET",
                 url: "../../server/server_arrival.php",
-                data: ({ arrival_date: arrivalDateValue, arrival_case_id: caseId }),
+                data: ({ order_number: orderNumber, arrival_date: arrivalDateValue, arrival_case_id: caseId }),
                 success: (result) => {
 
                     if (result != 'true') {

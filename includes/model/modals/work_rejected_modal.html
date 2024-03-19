@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Wprowadź przyczynę przekazania/zwrotu</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Wprowadź przyczynę odrzucenia</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -15,8 +15,6 @@
                     </div>
                     <label for="input-work-rejected-reason" class="form-label">Powód</label>
                     <div class="input-group has-validation mb-3">
-                        <!-- <input name="input-work-completed-image" class="form-control" type="file"
-                            id="input-work-completed-image" required> -->
                         <textarea class="form-control" id="input-work-rejected-reason" name="input-work-rejected-reason"
                             rows="3" required></textarea>
                         <div class="invalid-feedback">
@@ -45,43 +43,41 @@
 
     workRejectedForm.on('submit', (event) => {
 
-        // CONFIRM FIRST AS DATES WILL BE REMOVED
-        if (confirm("Przekazanie / Zwrócenie zgłoszenia spowoduje usunięcie czasu rozpoczęcia i zakończenia pracy z Twojego widoku ale informacje pozostaną zapisane w bazie danych.") == true) {
-
-            if (!workRejectedForm[0].checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            } else {
-
-                // Handle text input
-                let caseId = $('#work_rejected_case_id').val();
-                let reason = $('#input-work-rejected-reason').val();
 
 
-                // var formData = new FormData(workCompletedForm[0]);
-                var formData = new FormData();
-                formData.append('input_work_rejected_reason', reason);
-                formData.append('work_rejected_case_id', caseId);
+        if (!workRejectedForm[0].checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+        } else {
 
-                $.ajax({
+            // Handle text input
+            let caseId = $('#work_rejected_case_id').val();
+            let reason = $('#input-work-rejected-reason').val();
 
-                    type: "POST",
-                    url: "../../server/server_work_reject.php",
-                    data: formData,
-                    processData: false,  // tell jQuery not to process the data
-                    contentType: false,  // tell jQuery not to set contentType
-                    complete: (result => {
 
-                        if (result.responseText != 'true') {
-                            alert('Ups! Coś poszło nie tak, skontaktuj się z administratorem');
-                        }
-                    })
-                });
+            // var formData = new FormData(workCompletedForm[0]);
+            var formData = new FormData();
+            formData.append('input_work_rejected_reason', reason);
+            formData.append('work_rejected_case_id', caseId);
 
-            }
+            $.ajax({
 
-            workRejectedForm[0].classList.add('was-validated');
+                type: "POST",
+                url: "../../../server/server_work_reject.php",
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                complete: (result => {
+
+                    if (result.responseText != 'true') {
+                        alert('Ups! Coś poszło nie tak, skontaktuj się z administratorem');
+                    }
+                })
+            });
+
         }
+
+        workRejectedForm[0].classList.add('was-validated');
 
     });
 

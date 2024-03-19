@@ -1,11 +1,42 @@
 <?php
 
-
 abstract class STATUS {
 
-    const NOWY = 1;
-    const ZATWIERDZONY = 2;
-    const ZAMOWIONY = 3;
+    const STATUS_ACCEPTED_VALUE = 3;
+    const STATUS_ACCEPTED_DISPLAY_VALUE = "Zaakceptowany";
+
+    const STATUS_ORDERED_VALUE = 5;
+    const STATUS_ORDERED_DISPLAY_VALUE = "Zamówiony";
+
+    const STATUS_REJECTED_VALUE = 2;
+    const STATUS_REJECTED_DISPLAY_VALUE = "Odrzucony";
+
+    const STATUS_CLOSED_VALUE = 6;
+    const STATUS_CLOSED_DISPLAY_VALUE = "Zamknięty";
+
+}
+
+abstract class HistoryEntryType {
+
+    const STATE_CHANGE = "Zmiana statusu";
+
+    const ADD_INFO_STATUS = "Nowy status";
+    const ADD_INFO_REJECT = "Powód";
+    const ADD_INFO_ARRIVAL_DATE = "Przybliżony czas dostawy";
+    const ADD_INFO_NEW_CASE = "ID nowego zgłoszenia";
+    const ADD_INFO_ORDER_NUMBER = "Number zamówienia";
+
+    public static function composeHistoryEntry($type, $userDisplayName, $additionalInfo) {
+
+        $tmp = new stdClass();
+
+        $tmp->type = $type;
+        $tmp->userDisplayName = $userDisplayName;
+        $tmp->additionalInfo = $additionalInfo;
+
+        return $tmp;
+
+    }
 
 }
 
@@ -26,19 +57,22 @@ class Zgloszenie {
     protected $_comment;
     protected $_status;
 
-    protected $_zatwierdzajacy;
-    protected $_czas_zatwierdzenia;
-    protected $_zamawiajacy;
-    protected $_czas_zamowienia;
+    // protected $_zatwierdzajacy;
+    // protected $_czas_zatwierdzenia;
+    // protected $_zamawiajacy;
+    // protected $_czas_zamowienia;
     protected $_data_dostawy;
 
     protected $_attachment_uri;
+    protected $_assigned_department;
+
+    protected $_history;
 
 
     public function __construct(
         $_id, $_created_by, $_czas_wprowadzenie, $_order, $_link, $_syntetyka, $_mpk, 
-        $_podmiot, $_cost, $_project, $_amount, $_comment, $_status, $_zatwierdzajacy, 
-        $_czas_zatwierdzenia, $_zamawiajacy, $_czas_zamowienia, $_data_dostawy, $_attachment_uri) {
+        $_podmiot, $_cost, $_project, $_amount, $_comment, $_status, $_data_dostawy, $_attachment_uri,
+        $_assigned_department, $_history) {
 
 
         $this->_id = $_id;
@@ -54,13 +88,25 @@ class Zgloszenie {
         $this->_amount = $_amount;
         $this->_comment = $_comment;
         $this->_status = $_status;
-        $this->_czas_zatwierdzenia = $_czas_zatwierdzenia;
-        $this->_zamawiajacy = $_zamawiajacy;
-        $this->_czas_zamowienia = $_czas_zamowienia;
         $this->_data_dostawy = $_data_dostawy;
-        $this->_zatwierdzajacy = $_zatwierdzajacy;
         $this->_attachment_uri = $_attachment_uri;
+        $this->_assigned_department = $_assigned_department;
+        $this->_history = $_history;
 
+    }
+
+    public function composeHistory() {
+
+        $historyJson = json_decode($this->_history);
+
+        $historyString = "Historia zgłoszenia:\n";
+
+        foreach ($historyJson as $key => $value) {
+
+            $historyString .= $key .": ". $value;
+        }
+
+        return $historyString;
     }
 
     public function getPodmiotDisplayValue() {
@@ -106,72 +152,6 @@ class Zgloszenie {
         return false;
 
     }
-
-    public function getZatwierdzajacyDisplayName() {
-
-        $createdByQuery = "SELECT * FROM `users` WHERE `kod`='".$this->_zatwierdzajacy."'";
-
-        $db = new Mysql;
-
-        $db->dbConnect();
-
-        $result = $db->performQuery($createdByQuery);
-
-        if ($row = $result->fetch_assoc()) {
-
-            $db->dbDisconnect();
-            return $row['imie'].' '.$row['nazwisko'];
-        }
-
-        $db->dbDisconnect();
-
-        return false;
-
-    }
-
-    public function getZamawiającyDisplayName() {
-
-        $createdByQuery = "SELECT * FROM `users` WHERE `kod`='".$this->_zamawiajacy."'";
-
-        $db = new Mysql;
-
-        $db->dbConnect();
-
-        $result = $db->performQuery($createdByQuery);
-
-        if ($row = $result->fetch_assoc()) {
-
-            $db->dbDisconnect();
-            return $row['imie'].' '.$row['nazwisko'];
-        }
-
-        $db->dbDisconnect();
-
-        return false;
-
-    }
-
-    // public function getOrderDisplayValue() {
-
-    //     $query = "SELECT `label` FROM `mpk` WHERE `value`='".$this->_order."'";
-
-    //     $db = new Mysql;
-
-    //     $db->dbConnect();
-
-    //     $result = $db->performQuery($query);
-
-    //     if ($row = $result->fetch_assoc()) {
-
-    //         $db->dbDisconnect();
-    //         return $row['label'];
-    //     }
-
-    //     $db->dbDisconnect();
-
-    //     return false;
-
-    // }
 
     
     public function getMPKDisplayValue() {
@@ -286,6 +266,46 @@ class Zgloszenie {
 
     }
 
+
+    /**
+     * Get the value of _history
+     */ 
+    public function get_history()
+    {
+        return $this->_history;
+    }
+
+    /**
+     * Set the value of _history
+     *
+     * @return  self
+     */ 
+    public function set_history($_history)
+    {
+        $this->_history = $_history;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of _assigned_department
+     */ 
+    public function get_assigned_department()
+    {
+        return $this->_assigned_department;
+    }
+
+    /**
+     * Set the value of _assigned_department
+     *
+     * @return  self
+     */ 
+    public function set_assigned_department($_assigned_department)
+    {
+        $this->_assigned_department = $_assigned_department;
+
+        return $this;
+    }
 
     /**
      * Get the value of _czas_wprowadzenie
@@ -528,66 +548,6 @@ class Zgloszenie {
     }
 
     /**
-     * Get the value of _czas_zatwierdzenia
-     */ 
-    public function get_czas_zatwierdzenia()
-    {
-        return $this->_czas_zatwierdzenia;
-    }
-
-    /**
-     * Set the value of _czas_zatwierdzenia
-     *
-     * @return  self
-     */ 
-    public function set_czas_zatwierdzenia($_czas_zatwierdzenia)
-    {
-        $this->_czas_zatwierdzenia = $_czas_zatwierdzenia;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of _zamawiajcy
-     */ 
-    public function get_zamawiajacy()
-    {
-        return $this->_zamawiajacy;
-    }
-
-    /**
-     * Set the value of _zamawiajcy
-     *
-     * @return  self
-     */ 
-    public function set_zamawiajcy($_zamawiajacy)
-    {
-        $this->_zamawiajacy = $_zamawiajacy;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of _czas_zamowienia
-     */ 
-    public function get_czas_zamowienia()
-    {
-        return $this->_czas_zamowienia;
-    }
-
-    /**
-     * Set the value of _czas_zamowienia
-     *
-     * @return  self
-     */ 
-    public function set_czas_zamowienia($_czas_zamowienia)
-    {
-        $this->_czas_zamowienia = $_czas_zamowienia;
-
-        return $this;
-    }
-
-    /**
      * Get the value of _data_dostawy
      */ 
     public function get_data_dostawy()
@@ -603,26 +563,6 @@ class Zgloszenie {
     public function set_data_dostawy($_data_dostawy)
     {
         $this->_data_dostawy = $_data_dostawy;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of _zatwierdzajacy
-     */ 
-    public function get_zatwierdzajacy()
-    {
-        return $this->_zatwierdzajacy;
-    }
-
-    /**
-     * Set the value of _zatwierdzajacy
-     *
-     * @return  self
-     */ 
-    public function set_zatwierdzajacy($_zatwierdzajacy)
-    {
-        $this->_zatwierdzajacy = $_zatwierdzajacy;
 
         return $this;
     }

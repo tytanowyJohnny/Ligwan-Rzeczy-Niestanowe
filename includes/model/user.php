@@ -1,6 +1,18 @@
 <?php
 
-// include_once('../../db/db.php');
+// include_once ("...")
+require __DIR__ . '/../serverUtils.php';
+
+abstract class UserType {
+
+    // Value matches id from DB
+
+    const WPROWADZANIE = 1;
+    const ZATWIERDZANIE = 2;
+    const ZAMAWIANIE = 3;
+    const PRZEKAZYWANIE = 4;
+
+}
 
 class UserService
 {
@@ -46,10 +58,17 @@ class UserService
         return $this->_user['typ'];
     }
 
-    public function getUserDepartment() 
+    public function getAssignedDepartmentDisplayValue()
     {
-        return $this->_user['dzial'];
-;    }
+        return $this->_user['assigned_department_display'];
+        ;
+    }
+
+    public function getAssignedDepartmentValue()
+    {
+        return $this->_user['assigned_department'];
+
+    }
 
     protected function authorize()
     {
@@ -61,6 +80,8 @@ class UserService
 
         $result = $this->_db_handler->performQuery($authQuery);
 
+        $this->_db_handler->dbDisconnect();
+
         if (!$result)
             return false;
 
@@ -71,34 +92,116 @@ class UserService
             }
         }
 
+        return false;
+    }
+
+    protected function getUserAssignedDepartment()
+    {
+
+        $this->_db_handler->dbConnect();
+
+        $query = "SELECT `department` FROM `m2m_users_departments` WHERE `user` = '" . $this->_username . "'";
+
+        $result = $this->_db_handler->performQuery($query);
+
         $this->_db_handler->dbDisconnect();
+
+
+        if (!$result)
+            return false;
+
+        if ($row = $result->fetch_assoc()) {
+
+            if ($row) {
+                return $row['department']; // ID
+            }
+        }
+
+        return false;
+
+    }
+
+    protected function loadUserAccessTypes()
+    {
+
+        $this->_user['access_types'] = array();
+
+        $this->_db_handler->dbConnect();
+
+        $query = "SELECT `type_id` FROM `m2m_users_types` WHERE `user` = '" . $this->_username . "'";
+
+        $result = $this->_db_handler->performQuery($query);
+
+        while ($row = $result->fetch_assoc()) {
+
+            if ($row) {
+
+                $innerQuery = "SELECT * FROM `user_types` WHERE `id` = " . $row['type_id'];
+
+                $innerResult = $this->_db_handler->performQuery($innerQuery);
+
+                if ($innerRow = $innerResult->fetch_assoc()) {
+
+                    if ($innerRow) {
+
+                        $tempArr = array(
+                            'id' => $innerRow['id'],
+                            'display_value' => $innerRow['type_label']
+                        );
+
+                        array_push($this->_user['access_types'], $tempArr);
+
+                    }
+                }
+
+            }
+
+        }
+
+        $this->_db_handler->dbDisconnect();
+
+        if(count($this->_user['access_types']) > 0)
+            return true;
+
+        return false;
+    }
+
+    public function getUserAccessDisplayList() {
+
+        function getDisplayValues($obj) {
+            return $obj['display_value'];
+        }
+
+        $displayArr = array_map('getDisplayValues', $this->_user['access_types']);
+
+        return implode(', ', $displayArr);
+
+    }
+
+    public function getUserAccessList() {
+
+        function getValues($obj) {
+            return $obj['id'];
+        }
+
+        $valuesArr = array_map('getValues', $this->_user['access_types']);
+
+        return $valuesArr;
     }
 
     public function login()
     {
 
         $user = $this->authorize();
+
         if ($user) {
+
             $this->_user = $user; // store it so it can be accessed later
+            $this->loadUserAccessTypes();
 
-            // Fetch type display value
-            $this->_db_handler->dbConnect();
-
-            $typeQuery = "SELECT `type_label` FROM `user_types` WHERE `type_name`='" . $this->_user['typ'] . "'";
-
-            $typeResult = $this->_db_handler->performQuery($typeQuery);
-
-            if (!$typeResult)
-                return false;
-
-            while ($row = $typeResult->fetch_assoc()) {
-
-                if ($row) {
-                    $this->_user['type_display'] = $row['type_label'];
-                }
-            }
-
-            $this->_db_handler->dbDisconnect();
+            // $this->_user['type_display'] = getUserTypeDisplayValue($user['typ']);
+            $this->_user['assigned_department'] = $this->getUserAssignedDepartment();
+            $this->_user['assigned_department_display'] = getAssignedDepartmentAbbr($this->_user['assigned_department']);
 
             return true;
         }

@@ -2,9 +2,22 @@
 
 
 include_once('../db/db.php');
-include('../includes/model/zgloszenie.php');
+include_once('../includes/model/zgloszenie.php');
+include_once('../includes/model/flow_processor.php');
+include_once('../includes/model/user.php');
 
-// $rowInfo = [];
+require_once __DIR__ . '/../includes/serverUtils.php';
+
+$user;
+
+if (!isset($_SESSION)) {
+    session_start();
+    $user = unserialize($_SESSION['user_object']);
+}
+
+if (!isset($_SESSION['user_object'])) {
+    header('Location: ../login.php');
+}
 
 if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
 
@@ -28,8 +41,9 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
             $tempZgloszenie = new Zgloszenie(
                 $row['id'], $row['created_by'], $row['czas_wprowadzenie'], $row['zamowienie'], 
                 $row['link'], $row['syntetyka'], $row['mpk'], $row['podmiot'], $row['cost'], 
-                $row['project'], $row['amount'], $row['comment'], $row['status'], $row['zatwierdzajacy'], 
-                $row['czas_zatwierdzenia'], $row['zamawiajacy'], $row['czas_zamowienia'], $row['data_dostawy'], $row['attachment_uri']);
+                $row['project'], $row['amount'], $row['comment'], $row['status'],
+                $row['data_dostawy'], $row['attachment_uri'], $row['assigned_department'],
+                $row['history']);
             
             $info->id = $tempZgloszenie->get_id();
             $info->czas_wprowadzenie = $tempZgloszenie->get_czas_wprowadzenie();
@@ -48,13 +62,14 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
             $info->amount = $tempZgloszenie->get_amount();
             $info->comment = $tempZgloszenie->get_comment();
             $info->status = $tempZgloszenie->get_status();
-            $info->zatwierdzajacyDisplayName = $tempZgloszenie->getZatwierdzajacyDisplayName();
-            $info->czas_zatwierdzenia = $tempZgloszenie->get_czas_zatwierdzenia();
-            $info->zamawiajacy = $tempZgloszenie->get_zamawiajacy();
-            $info->zamawiajacyDisplayName = $tempZgloszenie->getZamawiającyDisplayName();
-            $info->czas_zamowienia = $tempZgloszenie->get_czas_zamowienia();
             $info->data_dostawy = $tempZgloszenie->get_data_dostawy();
             $info->attachment_uri = $tempZgloszenie->get_attachment_uri();
+            $info->assigned_department = $tempZgloszenie->get_assigned_department();
+            $info->assignedDepartmentDisplayValue = getAssignedDepartmentAbbr($tempZgloszenie->get_assigned_department());
+            
+
+            $fp = new FlowProcessor();
+            $info->validTransitions = $fp->getValidTransitions($tempZgloszenie->get_status(), $user->getUserAccessList());
 
             // array_push($rowInfo, $info);
         }
