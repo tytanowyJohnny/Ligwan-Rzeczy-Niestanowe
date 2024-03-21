@@ -1,7 +1,7 @@
 <?php
 
-include_once('db/db.php');
-include('includes/model/user.php');
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/user.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/db/db.php';
 
 if (!isset($_SESSION)) {
     session_start();

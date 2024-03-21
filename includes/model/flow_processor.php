@@ -1,9 +1,8 @@
 <?php
 
-include_once('../../db/db.php');
-include_once('user.php');
-
-require_once __DIR__ . '/../commonUtils.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/user.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/db/db.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/commonUtils.php';
 
 abstract class FLOW_STAGE {
 

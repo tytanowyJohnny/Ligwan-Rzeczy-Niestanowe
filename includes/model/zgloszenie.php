@@ -352,7 +352,11 @@ class Zgloszenie {
      */ 
     public function get_link()
     {
-        return $this->_link;
+        // Remove https:// if included
+
+        $format = preg_replace(['/https:\/\//', '/http:\/\//'], '', $this->_link);
+
+        return $format;
     }
 
     /**

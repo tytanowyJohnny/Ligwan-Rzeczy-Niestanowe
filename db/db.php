@@ -1,7 +1,8 @@
 <?php
 
 
-include 'db_config.php';
+// include 'db_config.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/db/db_config.php';
 
 class Mysql extends Dbconfig {
 

@@ -1,7 +1,7 @@
 <?php
 
 
-include_once('../db/db.php');
+include_once $_SERVER['DOCUMENT_ROOT'] . '/db/db.php';
 
 if (isset($_GET['assignment_type']) && !empty($_GET['assignment_type']) && isset($_GET['assignment_case_id']) && !empty($_GET['assignment_case_id'])) {
 

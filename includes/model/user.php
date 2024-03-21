@@ -1,7 +1,7 @@
 <?php
 
 // include_once ("...")
-require __DIR__ . '/../serverUtils.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/serverUtils.php';
 
 abstract class UserType {
 

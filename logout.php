@@ -1,6 +1,6 @@
 <?php
 
-include('includes/model/user.php');
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/user.php';
 
 if (!isset($_SESSION)) {
     session_start();
