@@ -79,6 +79,12 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
     <link href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+
     <meta http-equiv="Content-Language" content="pl">
     <meta charset="UTF-8">
 
@@ -273,7 +279,8 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                     <div class="col-sm-4">
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text" id="basic-addon3">Projekt</span>
-                            <select name="input-project" class="form-select" id="basic-addon-select-project" required>
+                            <select name="input-project" class="form-select" id="basic-addon-select-project" 
+                                data-live-search="true" required>
 
                                 <?php
 
@@ -293,7 +300,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
 
                                 while ($row = $result->fetch_assoc()) {
 
-                                    echo "<option value='" . $row['value'] . "'>" . $row['label'] . "</option>";
+                                    echo "<option value='" . $row['value'] . "' data-tokens='" . $row['label'] . "'>" . $row['label'] . "</option>";
                                 }
 
                                 $db->dbDisconnect();
@@ -310,7 +317,8 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                     <div class="col-sm-4">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon4">Koszt rodzajowy</span>
-                            <select name="input-cost" class="form-select" id="basic-addon-select-cost">
+                            <select name="input-cost" class="form-select" id="basic-addon-select-cost"
+                                data-live-search="true">
 
                                 <?php
 
@@ -330,7 +338,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
 
                                 while ($row = $result->fetch_assoc()) {
 
-                                    echo "<option value='" . $row['value'] . "'>" . $row['label'] . "</option>";
+                                    echo "<option value='" . $row['value'] . "' data-tokens='" . $row['label'] . "'>" . $row['label'] . "</option>";
                                 }
 
                                 $db->dbDisconnect();

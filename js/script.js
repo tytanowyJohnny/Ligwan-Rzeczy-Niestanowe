@@ -26,6 +26,24 @@ $(document).ready(function () {
     $('#arrival-modal-container').load('../includes/model/modals/arrival_modal.html');
     $('#work-acceptance-modal-container').load('../includes/model/modals/work_acceptance_modal.html');
 
+    /*
+        
+        Select2
+    
+        */
+
+    $('#basic-addon-select-podmiot').select2({
+        theme: 'bootstrap-5'
+    });
+    
+    $('#basic-addon-select-project').select2({
+        theme: 'bootstrap-5'
+    });
+
+    $('#basic-addon-select-cost').select2({
+        theme: 'bootstrap-5'
+    });
+    
     /* 
         Data Tables
                         */
