@@ -369,7 +369,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                     <div class="col-sm-2">
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text" id="basic-addon1">Wartość</span>
-                            <input type="number" step="0.1" id="input-amount-value" name="input-amount-value" class="form-control" placeholder="zł" value="<?php if(isset($loadedCaseMode) && $loadedCaseMode) echo $loadedCase->get_amount_value() ?>" required>
+                            <input type="number" step="0.01" id="input-amount-value" name="input-amount-value" class="form-control" placeholder="zł" value="<?php if(isset($loadedCaseMode) && $loadedCaseMode) echo $loadedCase->get_amount_value() ?>" required>
                             <div class="invalid-feedback">
                                 To pole jest wymagane
                             </div>
