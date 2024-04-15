@@ -3,6 +3,31 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/zgloszenie.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/db/db.php';
 
+
+function changeArrival($caseId, $userDisplayName, $arrivalDate, $additionalInfo = NULL) {
+
+    $db = new Mysql;
+    $db->dbConnect();
+    $query = "UPDATE `zgloszenia` SET `data_dostawy`='" . $arrivalDate . "'  WHERE `id`=" . $caseId;
+    $result = $db->performQuery($query);
+    $db->dbDisconnect();
+
+    // HISTORY UPDATE
+    return updateHistory($caseId, HistoryEntryType::composeHistoryEntry(HistoryEntryType::ARRIVAL_DATE_CHANGE, $userDisplayName, $additionalInfo));
+
+}
+function setArrival($caseId, $status, $userDisplayName, $arrivalDate, $additionalInfo = NULL) {
+
+    $statusUpdate = setStatus($caseId, $status, $userDisplayName, $additionalInfo);
+
+    $db = new Mysql();
+    $db->dbConnect();
+    $query = "UPDATE `zgloszenia` SET `data_dostawy`='" . $arrivalDate . "' WHERE `id`=" . $caseId;
+    $result = $db->performQuery($query);
+
+    return $result;
+
+}
 function setStatus($caseId, $status, $userDisplayName, $additionalInfo = NULL)
 {
 

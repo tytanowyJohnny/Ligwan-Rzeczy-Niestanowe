@@ -41,7 +41,7 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
             $tempZgloszenie = new Zgloszenie(
                 $row['id'], $row['created_by'], $row['czas_wprowadzenie'], $row['zamowienie'], 
                 $row['link'], $row['syntetyka'], $row['mpk'], $row['podmiot'], $row['cost'], 
-                $row['project'], $row['amount'], $row['comment'], $row['status'],
+                $row['project'], $row['amount'], $row['amount_value'], $row['comment'], $row['status'],
                 $row['data_dostawy'], $row['attachment_uri'], $row['assigned_department'],
                 $row['history']);
             
@@ -60,6 +60,7 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
             $info->project = $tempZgloszenie->get_project();
             $info->projectDisplayValue = $tempZgloszenie->getProjectDisplayValue();
             $info->amount = $tempZgloszenie->get_amount();
+            $info->amount_value = $tempZgloszenie->get_amount_value();
             $info->comment = $tempZgloszenie->get_comment();
             $info->status = $tempZgloszenie->get_status();
             $info->data_dostawy = $tempZgloszenie->get_data_dostawy();

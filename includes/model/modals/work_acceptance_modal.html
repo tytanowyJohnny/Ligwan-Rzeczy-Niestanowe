@@ -31,6 +31,24 @@
                             Musisz wybrać koszt rodzajowy
                         </div>
                     </div>
+                    <div class="input-group has-validation mb-3" id="input-group-syntetyka">
+                        <span class="input-group-text" id="basic-addon3">Syntetyka</span>
+                        <select name="modal-input-syntetyka" class="form-select" id="modal-input-syntetyka" required>
+                            <option selected disabled value=''>-- Wybierz --</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Musisz wybrać syntetykę
+                        </div>
+                    </div>
+                    <div class="input-group has-validation mb-3" id="input-group-project">
+                        <span class="input-group-text" id="basic-addon3">Projekt</span>
+                        <select name="modal-input-project" class="form-select" id="modal-input-project" required>
+                            <option selected disabled value=''>-- Wybierz --</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Musisz wybrać projekt
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -59,13 +77,15 @@
             // Handle input
             let mpkValue = $('#modal-input-mpk').val();
             let costValue = $('#modal-input-cost').val();
+            let syntetykaValue = $('#modal-input-syntetyka').val();
+            let projectValue = $('#modal-input-project').val();
             let caseId = $('#accepted_case_id').val();
 
             $.ajax({
 
                 type: "GET",
                 url: "../../server/server_work_accept.php",
-                data: ({ mpk_value: mpkValue, cost_value: costValue, accepted_case_id: caseId }),
+                data: ({ mpk_value: mpkValue, cost_value: costValue, syntetyka_value: syntetykaValue, project_value: projectValue, accepted_case_id: caseId }),
                 success: (result) => {
 
                     // alert(result);

@@ -19,12 +19,13 @@ abstract class STATUS {
 abstract class HistoryEntryType {
 
     const STATE_CHANGE = "Zmiana statusu";
+    const ARRIVAL_DATE_CHANGE = "Zmiana daty dostawy";
 
     const ADD_INFO_STATUS = "Nowy status";
     const ADD_INFO_REJECT = "Powód";
     const ADD_INFO_ARRIVAL_DATE = "Przybliżony czas dostawy";
     const ADD_INFO_NEW_CASE = "ID nowego zgłoszenia";
-    const ADD_INFO_ORDER_NUMBER = "Number zamówienia";
+    const ADD_INFO_ORDER_NUMBER = "Numer zamówienia";
 
     public static function composeHistoryEntry($type, $userDisplayName, $additionalInfo) {
 
@@ -62,17 +63,16 @@ class Zgloszenie {
     // protected $_zamawiajacy;
     // protected $_czas_zamowienia;
     protected $_data_dostawy;
-
     protected $_attachment_uri;
     protected $_assigned_department;
-
     protected $_history;
 
+    protected $_amount_value;
 
     public function __construct(
         $_id, $_created_by, $_czas_wprowadzenie, $_order, $_link, $_syntetyka, $_mpk, 
-        $_podmiot, $_cost, $_project, $_amount, $_comment, $_status, $_data_dostawy, $_attachment_uri,
-        $_assigned_department, $_history) {
+        $_podmiot, $_cost, $_project, $_amount, $_amount_value, $_comment, $_status, 
+        $_data_dostawy, $_attachment_uri, $_assigned_department, $_history) {
 
 
         $this->_id = $_id;
@@ -86,6 +86,7 @@ class Zgloszenie {
         $this->_cost = $_cost;
         $this->_project = $_project;
         $this->_amount = $_amount;
+        $this->_amount_value = $_amount_value;
         $this->_comment = $_comment;
         $this->_status = $_status;
         $this->_data_dostawy = $_data_dostawy;
@@ -467,6 +468,26 @@ class Zgloszenie {
     public function set_project($_project)
     {
         $this->_project = $_project;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of _amount
+     */ 
+    public function get_amount_value()
+    {
+        return $this->_amount_value;
+    }
+
+    /**
+     * Set the value of _amount
+     *
+     * @return  self
+     */ 
+    public function set_amount_value($_amount_value)
+    {
+        $this->_amount_value = $_amount_value;
 
         return $this;
     }

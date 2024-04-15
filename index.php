@@ -45,6 +45,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                 $row['cost'],
                 $row['project'],
                 $row['amount'],
+                $row['amount_value'],
                 $row['comment'],
                 $row['status'],
                 $row['data_dostawy'],
@@ -150,7 +151,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                     <div class="col-sm-4">
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text" id="basic-addon3">Syntetyka</span>
-                            <select name="input-syntetyka" class="form-select" id="basic-addon-select-syntetyka" required>
+                            <select name="input-syntetyka" class="form-select" id="basic-addon-select-syntetyka">
 
                                 <?php
 
@@ -178,9 +179,9 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
 
                                 ?>
                             </select>
-                            <div class="invalid-feedback">
+                            <!-- <div class="invalid-feedback">
                                 To pole jest wymagane
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -280,7 +281,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text" id="basic-addon3">Projekt</span>
                             <select name="input-project" class="form-select" id="basic-addon-select-project" 
-                                data-live-search="true" required>
+                                data-live-search="true">
 
                                 <?php
 
@@ -309,9 +310,9 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                                 ?>
 
                             </select>
-                            <div class="invalid-feedback">
+                            <!-- <div class="invalid-feedback">
                                 To pole jest wymagane
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -356,10 +357,19 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                 <div class="row">
 
                     <div class="col-sm-2"></div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text" id="basic-addon1">Ilość</span>
-                            <input type="number" step="1" id="input-amount" name="input-amount" class="form-control" value="<?php if(isset($loadedCaseMode) && $loadedCaseMode) echo $loadedCase->get_amount() ?>">
+                            <input type="number" step="1" id="input-amount" name="input-amount" class="form-control" value="<?php if(isset($loadedCaseMode) && $loadedCaseMode) echo $loadedCase->get_amount() ?>" required>
+                            <div class="invalid-feedback">
+                                To pole jest wymagane
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group has-validation mb-3">
+                            <span class="input-group-text" id="basic-addon1">Wartość</span>
+                            <input type="number" step="0.1" id="input-amount-value" name="input-amount-value" class="form-control" placeholder="zł" value="<?php if(isset($loadedCaseMode) && $loadedCaseMode) echo $loadedCase->get_amount_value() ?>" required>
                             <div class="invalid-feedback">
                                 To pole jest wymagane
                             </div>
@@ -431,6 +441,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                     <th scope="col">Projekt</th>
                     <th scope="col">Link</th>
                     <th scope="col">Ilość</th>
+                    <th scope="col">Wartość</th>
                     <th scope="col">Status</th>
                 </tr>
             </thead>
@@ -446,6 +457,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
     <div id='work-rejected-modal-container'></div>
     <div id='history-modal-container'></div>
     <div id='arrival-modal-container'></div>
+    <div id='change-arrival-modal-container'></div>
     <div id='work-acceptance-modal-container'></div>
 
     <!-- JS scripts -->

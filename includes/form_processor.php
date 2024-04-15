@@ -29,6 +29,7 @@ $isValid_podmiot = isset ($_POST['input-podmiot']);
 $isValid_cost = isset ($_POST['input-cost']) && !empty($_POST['input-cost']);
 $isValid_project = isset ($_POST['input-project']);
 $isValid_amount = isset ($_POST['input-amount']);
+$isValid_amount_value = isset ($_POST['input-amount-value']);
 $isValid_comment = isset ($_POST['input-comment']);
 
 $resetFlag = isset ($_POST['reset-flag']) && !empty ($_POST['reset-flag']);
@@ -45,7 +46,7 @@ $resetFlag = isset ($_POST['reset-flag']) && !empty ($_POST['reset-flag']);
 
 
 
-if (!$resetFlag && $isValid_link && $isValid_syntetyka && $isValid_podmiot && $isValid_project && $isValid_amount && $isValid_comment) {
+if (!$resetFlag && $isValid_podmiot && $isValid_amount && $isValid_amount_value) {
 
     // Attachment
     // The path you wish to upload the image to
@@ -65,23 +66,28 @@ if (!$resetFlag && $isValid_link && $isValid_syntetyka && $isValid_podmiot && $i
 
     $mpkValue = $isValid_mpk ? $_POST['input-mpk'] : '';
     $costValue = $isValid_cost ? $_POST['input-cost'] : '';
+    $linkValue = $isValid_link ? $_POST['input-link'] : '';
+    $syntetykaValue = $isValid_syntetyka ? $_POST['input-syntetyka'] : '';
+    $projectValue = $isValid_project ? $_POST['input-project'] : '';
+    $commentValue = $isValid_comment ? $_POST['input-comment'] : '';
 
     // Compose query
     $insertQuery = "INSERT INTO `zgloszenia` (`created_by`, `assigned_department`, `czas_wprowadzenie`, `link`, 
                                                     `syntetyka`, `mpk`, `podmiot`, `cost`, `project`, `amount`, 
-                                                    `comment`, `attachment_uri`)
+                                                    `amount_value`, `comment`, `attachment_uri`)
                     VALUES (
                         '" . $user->getUsername() . "',
                         '" . $user->getAssignedDepartmentValue() . "',
                         NOW(),
-                        '" . $_POST['input-link'] . "',
-                        '" . $_POST['input-syntetyka'] . "',
+                        '" . $linkValue . "',
+                        '" . $syntetykaValue . "',
                         '" . $mpkValue . "',
                         '" . $_POST['input-podmiot'] . "',
                         '" . $costValue . "',
-                        '" . $_POST['input-project'] . "',
+                        '" . $projectValue . "',
                         '" . $_POST['input-amount'] . "',
-                        '" . $_POST['input-comment'] . "',
+                        '" . $_POST['input-amount-value'] . "',
+                        '" . $commentValue . "',
                         " . $fullImagePath . ")";
 
     // echo $insertQuery;

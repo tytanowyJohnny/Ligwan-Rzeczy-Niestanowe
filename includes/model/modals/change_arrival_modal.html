@@ -1,0 +1,72 @@
+<!-- Assign Modal -->
+<div class="modal fade" id="change-arrival-modal" tabindex="-1" aria-labelledby="Wprowadź dane" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Wprowadź dane</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="change-arrival-form" class="needs-validation" novalidate>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon3">ID zgłoszenia</span>
+                        <input type="text" class="form-control" id="change_arrival_case_id" name="change_arrival_case_id"
+                            disabled>
+                    </div>
+                    <div class="input-group has-validation mb-3">
+                        <span class="input-group-text" id="basic-addon3">Przewidywana data dostawy</span>
+                        <input type="date" id="input-change-arrival-date" name="input-change-arrival-date" required>
+                        <div class="invalid-feedback">
+                            Musisz wprowadzić datę
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button type="button" class="btn btn-primary" id="change-arrival-submit">Zapisz</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // ASSIGNMENT
+
+    let changeArrivalForm = $('#change-arrival-form');
+
+    $('#change-arrival-submit').on('click', () => {
+
+        changeArrivalForm.submit();
+    });
+
+    changeArrivalForm.on('submit', (event) => {
+
+        if (!changeArrivalForm[0].checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+        } else {
+
+            // Handle input
+            let arrivalDateValue = $('#input-change-arrival-date').val();
+            let caseId = $('#change_arrival_case_id').val();
+
+            $.ajax({
+
+                type: "GET",
+                url: "../../server/server_change_arrival.php",
+                data: ({ arrival_date: arrivalDateValue, arrival_case_id: caseId }),
+                success: (result) => {
+
+                    if (result != 'true') {
+                        alert('Ups! Coś poszło nie tak, skontaktuj się z administratorem');
+                    }
+
+                }
+            });
+
+        }
+
+        changeArrivalForm[0].classList.add('was-validated');
+
+    });
+</script>

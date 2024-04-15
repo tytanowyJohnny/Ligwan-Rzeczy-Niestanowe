@@ -24,6 +24,7 @@ $(document).ready(function () {
     $('#work-rejected-modal-container').load('../includes/model/modals/work_rejected_modal.html');
     $('#history-modal-container').load('../includes/model/modals/history_modal.html');
     $('#arrival-modal-container').load('../includes/model/modals/arrival_modal.html');
+    $('#change-arrival-modal-container').load('../includes/model/modals/change_arrival_modal.html');
     $('#work-acceptance-modal-container').load('../includes/model/modals/work_acceptance_modal.html');
 
     /*
@@ -76,6 +77,7 @@ $(document).ready(function () {
             { data: 'project' },
             { data: 'link' },
             { data: 'amount' },
+            { data: 'amount_value'},
             { data: 'statusDisplayValue' }
         ]
     });
@@ -122,13 +124,19 @@ $(document).ready(function () {
 
                     let mpkDisplayValue = (resultObj['mpkDisplayValue']) ? resultObj['mpkDisplayValue'] : '-';
                     let costDisplayValue = (resultObj['costDisplayValue']) ? resultObj['costDisplayValue'] : '-';
+                    let syntetykaDisplayValue = (resultObj['syntetykaDisplayValue']) ? resultObj['syntetykaDisplayValue'] : '-';
+                    let projectDisplayValue = (resultObj['projectDisplayValue']) ? resultObj['projectDisplayValue'] : '-';
 
+                    const createDate = new Date(resultObj['czas_wprowadzenie']);
+
+                    let uniqueNumberValue = resultObj['id'] + '/' + (createDate.getMonth() + 1) + '/' + createDate.getFullYear() + '/RN';
+
+                    response += "<p><b>Sygnatura</b>: " + uniqueNumberValue + "</p>";
                     response += "<p><b>Dział</b>: " + resultObj['assignedDepartmentDisplayValue'] + "</p>";
-                    //response += "<p><b>Zamówienie</b>: " + resultObj['order'] + "</p>";
-                    response += "<p><b>Syntetyka</b>: " + resultObj['syntetykaDisplayValue'] + "</p>";
+                    response += "<p><b>Syntetyka</b>: " + syntetykaDisplayValue + "</p>";
                     response += "<p><b>MPK</b>: " + mpkDisplayValue + "</p>";
                     response += "<p><b>Koszt rodzajowy</b>: " + costDisplayValue + "</p>";
-                    response += "<p><b>Projekt</b>: " + resultObj['projectDisplayValue'] + "</p>";
+                    response += "<p><b>Projekt</b>: " + projectDisplayValue + "</p>";
 
                     response += "</div>";
 
@@ -156,6 +164,7 @@ $(document).ready(function () {
 
                     // // THIRD COLUMN
 
+                    // ACTIONS
                     resultObj['validTransitions'].forEach(($validTransition) => {
 
                         switch ($validTransition['target_status']) {
@@ -165,7 +174,7 @@ $(document).ready(function () {
                                 if(resultObj['mpkDisplayValue'] && resultObj['costDisplayValue'])
                                     response += "<button class='btn btn-success m-1' onclick=\"changeState('" + $validTransition['target_status'] + "')\">" + $validTransition['action_name'] + "</button>";
                                 else
-                                    response += "<button class='btn btn-success m-1' onclick=\"acceptWork(" + (resultObj['mpkDisplayValue'] != false) + ", " + (resultObj['costDisplayValue'] != false) + ")\">" + $validTransition['action_name'] + "</button>";
+                                    response += "<button class='btn btn-success m-1' onclick=\"acceptWork(" + (resultObj['mpkDisplayValue'] != false) + ", " + (resultObj['costDisplayValue'] != false) + ", " + (resultObj['syntetykaDisplayValue'] != false) + ", " + (resultObj['projectDisplayValue'] != false) + ")\">" + $validTransition['action_name'] + "</button>";
                                 break;
 
                             case '4': // ZATWIERDZANIE
@@ -177,10 +186,18 @@ $(document).ready(function () {
                                 break;
 
                             case '5': // ZAMAWIANIE
-                                response += "<button class='btn btn-success m-1' onclick=\"showArrivalModal('" + rowId + "')\">" + $validTransition['action_name'] + "</button>";
+                                let isOrdered = resultObj['status'] == 5;
+
+                                // alert(isOrdered);
+
+                                if(isOrdered) 
+                                    response += "<p><b>Przybliżona data dostawy</b>: " + resultObj['data_dostawy'] + "</p>";
+    
+                                response += "<button class='btn btn-success m-1' onclick=\"showArrivalModal(" + isOrdered + ")\">" + $validTransition['action_name'] + "</button>";
+
                                 break;
 
-                            case '1': // POPRAWAIANIE
+                            case '1': // POPRAWIANIE
                                 response += "<button class='btn btn-success m-1' onclick=\"processFromExisting()\">" + $validTransition['action_name'] + "</button>";
                                 break;
 
@@ -188,6 +205,7 @@ $(document).ready(function () {
                         }
 
                     });
+                    
 
                     response += "</div>";
 
@@ -200,8 +218,8 @@ $(document).ready(function () {
                         "<script>" +
                         "function post(path, parameters) { var form = $('<form></form>'); form.attr('method', 'post'); form.attr('action', path); $.each(parameters, function (key, value) { var field = $('<input></input>'); field.attr('type', 'hidden'); field.attr('name', key); field.attr('value', value); form.append(field); }); $(document.body).append(form); form.submit(); }" +
                         "function populateSelectOptions(selectId, optionsArr) { $.each(optionsArr, function(key, value) { $(selectId).append($('<option></option>').attr('value', value.value).text(value.label)); }); }" +
-                        "function showArrivalModal() { $('#arrival_case_id').val('" + rowId + "'); $('#arrival-modal').modal('show'); }" +
-                        "function acceptWork(hasMPK, hasCost) { $.ajax({ type: 'GET', url: '../server/server_get_missing_details.php', success: (result) => { $('#accepted_case_id').val('" + rowId + "'); let resultObj = JSON.parse(result); populateSelectOptions('#modal-input-mpk', resultObj[0]); populateSelectOptions('#modal-input-cost', resultObj[1]); if(hasMPK) { $('#input-group-mpk').remove(); } if(hasCost) { $('#input-group-cost').remove(); } $('#work-acceptance-modal').modal('show'); } }); }" +
+                        "function showArrivalModal(isOrdered) { if(isOrdered) { $('#change_arrival_case_id').val('" + rowId + "'); $('#change-arrival-modal').modal('show'); } else { $('#arrival_case_id').val('" + rowId + "'); $('#arrival-modal').modal('show'); } }" +
+                        "function acceptWork(hasMPK, hasCost, hasSyntetyka, hasProject) { $.ajax({ type: 'GET', url: '../server/server_get_missing_details.php', success: (result) => { $('#accepted_case_id').val('" + rowId + "'); let resultObj = JSON.parse(result); populateSelectOptions('#modal-input-mpk', resultObj[0]); populateSelectOptions('#modal-input-cost', resultObj[1]); populateSelectOptions('#modal-input-syntetyka', resultObj[2]); populateSelectOptions('#modal-input-project', resultObj[3]); if(hasMPK) { $('#input-group-mpk').remove(); } if(hasCost) { $('#input-group-cost').remove(); } if(hasSyntetyka) { $('#input-group-syntetyka').remove(); } if(hasProject) { $('#input-group-project').remove(); } $('#work-acceptance-modal').modal('show'); } }); }" +
                         "function changeState(targetStatus) { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: targetStatus}), success: (result) => { location.reload(); } }); }" +
                         "function processFromExisting() { post('../index.php', {load_case_id: " + rowId + "}); }" +
                         "function rejectWork() { $('#work_rejected_case_id').val('" + rowId + "'); $('#work-rejected-modal').modal('show'); }" +

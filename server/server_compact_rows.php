@@ -54,6 +54,7 @@ while ($row = $result->fetch_assoc()) {
             $row['cost'],
             $row['project'],
             $row['amount'],
+            $row['amount_value'],
             $row['comment'],
             $row['status'],
             $row['data_dostawy'],
@@ -74,6 +75,7 @@ while ($row = $result->fetch_assoc()) {
             "project" => $obj->get_project(),
             "link" => "<a href='https://" . $obj->get_link() . "' target='_blank'>" . $obj->get_link() . "</a>",
             "amount" => $obj->get_amount(),
+            "amount_value" => $obj->get_amount_value() . "zł",
             "statusDisplayValue" => $obj->getStatusDisplayValue()
 
         );
