@@ -26,6 +26,7 @@ $(document).ready(function () {
     $('#arrival-modal-container').load('../includes/model/modals/arrival_modal.html');
     $('#change-arrival-modal-container').load('../includes/model/modals/change_arrival_modal.html');
     $('#work-acceptance-modal-container').load('../includes/model/modals/work_acceptance_modal.html');
+    $('#request-denied-modal-container').load('../includes/model/modals/request_denied_modal.html');
 
     /*
         
@@ -97,7 +98,7 @@ $(document).ready(function () {
                     var resultObj = JSON.parse(result);
 
                     let response = "<div class='row'>" +
-                        "<div class='col-sm-4 text-center my-auto'>";
+                        "<div class='col-sm-3 text-center my-auto'>";
 
                     // FIRST COLUMN
 
@@ -116,7 +117,7 @@ $(document).ready(function () {
 
                     response += "</div>";
 
-                    response += "<div class='col-sm-4 text-left my-auto'>"
+                    response += "<div class='col-sm-5 text-left my-auto'>"
 
                     // // SECOND COLUMN
 
@@ -185,6 +186,10 @@ $(document).ready(function () {
                                 response += "<button class='btn btn-danger m-1' onclick=\"rejectWork()\">" + $validTransition['action_name'] + "</button>";
                                 break;
 
+                            case '7': // ODMAWIANIE
+                                response += "<button class='btn btn-danger m-1' onclick=\"denyRequest()\">" + $validTransition['action_name'] + "</button>";
+                                break;
+
                             case '5': // ZAMAWIANIE
                                 let isOrdered = resultObj['status'] == 5;
 
@@ -223,6 +228,7 @@ $(document).ready(function () {
                         "function changeState(targetStatus) { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: targetStatus}), success: (result) => { location.reload(); } }); }" +
                         "function processFromExisting() { post('../index.php', {load_case_id: " + rowId + "}); }" +
                         "function rejectWork() { $('#work_rejected_case_id').val('" + rowId + "'); $('#work-rejected-modal').modal('show'); }" +
+                        "function denyRequest() { $('#request_denied_case_id').val('" + rowId + "'); $('#request-denied-modal').modal('show'); }" +
                         "function showHistory() { $.ajax({ type: 'GET', url: '../server/server_get_history.php', data: ({rowId: " + rowId + "}), success: (result) => { $('#history-modal-body').html(result); $('#history-modal').modal('show'); } }); }" +
                         "</script>";
 

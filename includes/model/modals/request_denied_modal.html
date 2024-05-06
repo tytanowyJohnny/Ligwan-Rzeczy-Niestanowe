@@ -1,0 +1,85 @@
+<!-- WOrk Rejected Modal -->
+<div class="modal fade" id="request-denied-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Wprowadź przyczynę odmowy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="request-denied-form" class="needs-validation" novalidate>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon3">ID zgłoszenia</span>
+                        <input type="text" class="form-control" id="request_denied_case_id" name="request_denied_case_id"
+                            disabled>
+                    </div>
+                    <label for="input-request-denied-reason" class="form-label">Powód</label>
+                    <div class="input-group has-validation mb-3">
+                        <textarea class="form-control" id="input-request-denied-reason" name="input-request-denied-reason"
+                            rows="3" required></textarea>
+                        <div class="invalid-feedback">
+                            Musisz wprowadzić powód
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                <button type="button" class="btn btn-primary" id="request-denied-submit">Zapisz</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    // WORK COMPLETED
+
+    let requestDeniedForm = $('#request-denied-form');
+
+    $('#request-denied-submit').on('click', () => {
+
+        requestDeniedForm.submit();
+    });
+
+    requestDeniedForm.on('submit', (event) => {
+
+
+
+        if (!requestDeniedForm[0].checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+        } else {
+
+            // Handle text input
+            let caseId = $('#request_denied_case_id').val();
+            let reason = $('#input-request-denied-reason').val();
+
+
+            // var formData = new FormData(workCompletedForm[0]);
+            var formData = new FormData();
+            formData.append('input-request-denied-reason', reason);
+            formData.append('request-denied-case-id', caseId);
+
+            $.ajax({
+
+                type: "POST",
+                url: "../../../server/server_request_denied.php",
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                complete: (result => {
+
+                    if (result.responseText != 'true') {
+                        alert('Ups! Coś poszło nie tak, skontaktuj się z administratorem');
+                    }
+                })
+            });
+
+        }
+
+        requestDeniedForm[0].classList.add('was-validated');
+
+    });
+
+
+</script>

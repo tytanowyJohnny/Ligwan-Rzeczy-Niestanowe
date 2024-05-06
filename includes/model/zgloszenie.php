@@ -11,6 +11,9 @@ abstract class STATUS {
     const STATUS_REJECTED_VALUE = 2;
     const STATUS_REJECTED_DISPLAY_VALUE = "Odrzucony";
 
+    const STATUS_DENIED_VALUE = 7;
+    const STATUS_DENIED_DISPLAY_VALUE = "Odmowa";
+
     const STATUS_CLOSED_VALUE = 6;
     const STATUS_CLOSED_DISPLAY_VALUE = "Zamknięty";
 

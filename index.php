@@ -459,6 +459,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
     <div id='arrival-modal-container'></div>
     <div id='change-arrival-modal-container'></div>
     <div id='work-acceptance-modal-container'></div>
+    <div id='request-denied-modal-container'></div>
 
     <!-- JS scripts -->
     <script src="js/script.js"></script>
