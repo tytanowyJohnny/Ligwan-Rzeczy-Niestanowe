@@ -81,12 +81,17 @@ class FlowProcessor {
                 // Find Action
                 $searchResult = searchIn2DimArray($this->_actions_list, "id", $dependency['action']);
 
-                $temp = array(
-                    "action_name" => $this->_actions_list[$searchResult]["label"],
-                    "target_status" => $dependency['target']
-                );
+                // Validate duplicates
+                $validationResult = searchIn2DimArray($validArr, "action_name", $this->_actions_list[$searchResult]["label"]);
 
-                array_push($validArr, $temp);
+                if(!$validationResult) {
+                    $temp = array(
+                        "action_name" => $this->_actions_list[$searchResult]["label"],
+                        "target_status" => $dependency['target']
+                    );
+
+                    array_push($validArr, $temp);
+                }
 
             }
         
