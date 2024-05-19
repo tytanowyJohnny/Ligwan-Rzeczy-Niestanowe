@@ -31,7 +31,7 @@ $requestData = $_REQUEST;
 // $query = "SELECT * FROM `zgloszenia` WHERE `assigned_department` = '" . $userDepartment . "'";
 
 
-$query = "SELECT * FROM `zgloszenia` AS z INNER JOIN `users` AS u ON z.created_by = u.kod INNER JOIN `podmioty` AS p ON z.podmiot = p.ident INNER JOIN `statusy` AS s ON z.status = s.id";
+$query = "SELECT z.* FROM `zgloszenia` AS z INNER JOIN `users` AS u ON z.created_by = u.kod INNER JOIN `podmioty` AS p ON z.podmiot = p.ident INNER JOIN `statusy` AS s ON z.status = s.id";
 
 // SEARCH
 if(!empty($requestData['search']['value'])) {
