@@ -6,6 +6,7 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/user.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/zgloszenie.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/db/db.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/commonUtils.php';
 
 $user;
 
@@ -26,10 +27,51 @@ $userDepartment = $user->getAssignedDepartmentValue();
 $elevatedVisibility = hasElevatedVisibility($userDepartment);
 $requestData = $_REQUEST;
 
-$query = "SELECT * FROM `zgloszenia` WHERE `assigned_department` = '" . $userDepartment . "'";
 
-if ($elevatedVisibility)
-    $query = "SELECT * FROM `zgloszenia`";
+// $query = "SELECT * FROM `zgloszenia` WHERE `assigned_department` = '" . $userDepartment . "'";
+
+
+$query = "SELECT * FROM `zgloszenia` AS z INNER JOIN `users` AS u ON z.created_by = u.kod INNER JOIN `podmioty` AS p ON z.podmiot = p.ident INNER JOIN `statusy` AS s ON z.status = s.id";
+
+// SEARCH
+if(!empty($requestData['search']['value'])) {
+
+    $searchValue = $requestData['search']['value'];
+
+    $query .= " WHERE z.id LIKE '%" . $searchValue . "%' OR";
+    $query .= " u.imie LIKE '%" . $searchValue . "%' OR";
+    $query .= " u.nazwisko LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.czas_wprowadzenie LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.syntetyka LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.mpk LIKE '%" . $searchValue . "%' OR";
+    $query .= " p.name LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.cost LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.project LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.link LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.amount LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.amount_value LIKE '%" . $searchValue . "%' OR";
+    $query .= " s.label LIKE '%" . $searchValue . "%'";
+
+}
+
+if(!$elevatedVisibility) {
+    if(!empty($requestData['search']['value']))
+        $query .=  " AND z.assigned_department = '" . $userDepartment . "'";
+    else
+        $query .=  " WHERE z.assigned_department = '" . $userDepartment . "'";
+}
+
+// SORT
+$columns = ["z.id", "z.czas_wprowadzenie", "u.imie, u.nazwisko", "z.syntetyka", "z.mpk", "p.name", "z.cost", "z.project", "z.link", "z.amount", "z.amount_value", "s.label"];
+
+if(!empty($requestData['order'])) {
+
+    $colValue = $requestData['order'][0]['column'];
+    $dir = $requestData['order'][0]['dir'] === 'asc' ? 'ASC' : 'DESC';
+
+    $query .= " ORDER BY " . $columns[$colValue] . " " . $dir;
+
+}
 
 
 $result = $db->performQuery($query);
@@ -80,17 +122,19 @@ while ($row = $result->fetch_assoc()) {
 
         );
 
-        if(!empty($requestData['search']['value'])) {
+        array_push($compactRowsArr, $compactInfo);
 
-            if(in_array($requestData['search']['value'], $compactInfo)) {
-                array_push($compactRowsArr, $compactInfo);
-            }
+        // // SEARCH
+        // if(!empty($requestData['search']['value'])) {
 
-        } else {
+        //     if(in_array($requestData['search']['value'], $compactInfo)) {
+        //         array_push($compactRowsArr, $compactInfo);
+        //     }
 
-            array_push($compactRowsArr, $compactInfo);
-        }
+        // } else {
 
+        //     array_push($compactRowsArr, $compactInfo);
+        // }
         
     }
 }
@@ -99,7 +143,7 @@ $json_data = array(
     "draw" => intval($requestData['draw']),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw.
     "recordsTotal" => count($compactRowsArr),  // total number of records
     "recordsFiltered" => count($compactRowsArr), // total number of records after searching, if there is no searching then totalFiltered = totalData
-    "data" => $compactRowsArr   // total data array
+    "data" => $compactRowsArr // total data array
 );
 
 
