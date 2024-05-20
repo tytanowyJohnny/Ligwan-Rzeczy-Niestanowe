@@ -93,7 +93,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
 
 <body>
     <!-- Inputs -->
-    <div class="container">
+    <div class="container mb-4">
 
         <div class="row mt-3 mb-3 h-100 d-flex align-items-center">
 
