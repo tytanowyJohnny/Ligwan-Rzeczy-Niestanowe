@@ -88,7 +88,7 @@ if (!$resetFlag && $isValid_podmiot && $isValid_amount && $isValid_amount_value)
                         '" . $_POST['input-amount'] . "',
                         '" . $_POST['input-amount-value'] . "',
                         '" . $commentValue . "',
-                        " . $fullImagePath . ")";
+                        '" . $fullImagePath . "')";
 
     // echo $insertQuery;
 

@@ -171,7 +171,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
 
                                 while ($row = $result->fetch_assoc()) {
 
-                                    echo "<option value='" . $row['value'] . "'>" . $row['value'] . " - " . $row['label'] . "</option>";
+                                    echo "<option value='" . $row['value'] . "'>" . $row['label'] . "</option>";
                                 }
 
                                 $db->dbDisconnect();
