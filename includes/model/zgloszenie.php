@@ -248,6 +248,19 @@ class Zgloszenie {
 
     }
 
+    public function getStatusAndDeliveryDate() {
+
+        $statusDisplayValue = $this->getStatusDisplayValue();
+
+        $deliveryDate = $this->get_data_dostawy();
+
+        if($deliveryDate != null)
+            return $statusDisplayValue . "<br />(" . $deliveryDate . ")";
+
+        return $statusDisplayValue;
+
+    }
+
     public function getStatusDisplayValue() {
 
         $query = "SELECT `label` FROM `statusy` WHERE `value`='".$this->_status."'";

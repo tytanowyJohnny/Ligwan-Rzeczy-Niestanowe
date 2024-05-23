@@ -50,6 +50,7 @@ if(!empty($requestData['search']['value'])) {
     $query .= " z.link LIKE '%" . $searchValue . "%' OR";
     $query .= " z.amount LIKE '%" . $searchValue . "%' OR";
     $query .= " z.amount_value LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.comment LIKE '%" . $searchValue . "%' OR";
     $query .= " s.label LIKE '%" . $searchValue . "%'";
 
 }
@@ -118,7 +119,7 @@ while ($row = $result->fetch_assoc()) {
             "link" => "<a href='https://" . $obj->get_link() . "' target='_blank'>" . $obj->get_link() . "</a>",
             "amount" => $obj->get_amount(),
             "amount_value" => $obj->get_amount_value() . "zł",
-            "statusDisplayValue" => $obj->getStatusDisplayValue()
+            "statusDisplayValue" => $obj->getStatusAndDeliveryDate()
 
         );
 
