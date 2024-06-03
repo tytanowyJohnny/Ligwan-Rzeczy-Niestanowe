@@ -2,6 +2,7 @@
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/user.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/serverUtils.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/commonUtils.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/zgloszenie.php';
 
 $user;
@@ -23,7 +24,7 @@ if (isset($_POST['request-denied-case-id']) && !empty($_POST['request-denied-cas
 
     $additionalInfo = new stdClass();
     $additionalInfo->{HistoryEntryType::ADD_INFO_STATUS} = STATUS::STATUS_DENIED_DISPLAY_VALUE;
-    $additionalInfo->{HistoryEntryType::ADD_INFO_REJECT} = $reason;
+    $additionalInfo->{HistoryEntryType::ADD_INFO_REJECT} = parseInputForJSON($reason);
 
     $result = setStatus($rowId, STATUS::STATUS_DENIED_VALUE, $user->getUserDisplayName(), $additionalInfo);
 
