@@ -35,6 +35,7 @@ abstract class HistoryEntryType {
         $tmp = new stdClass();
 
         $tmp->type = $type;
+        $tmp->timestamp = date('d/m/Y H:i:s', time());
         $tmp->userDisplayName = $userDisplayName;
         $tmp->additionalInfo = $additionalInfo;
 

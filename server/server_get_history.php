@@ -31,6 +31,8 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
                 $historyString .= '--------------------------' . '<br />';
 
                 $historyString .= '<b>Typ wpisu:</b> ' . $historyJsonProp['type'] . '<br />';
+                if($historyJsonProp['timestamp'] != null)
+                    $historyString .= '<b>Czas:</b> ' . $historyJsonProp['timestamp'] . '<br />';
                 $historyString .= '<b>Wykonał:</b> ' . $historyJsonProp['userDisplayName'] . '<br />';
                 $historyString .= '<b><i><u>Dodatkowe informacje:</u></i></b>' . '</br >';;
 
