@@ -128,9 +128,9 @@ $(document).ready(function () {
                     let syntetykaDisplayValue = (resultObj['syntetykaDisplayValue']) ? resultObj['syntetykaDisplayValue'] : '-';
                     let projectDisplayValue = (resultObj['projectDisplayValue']) ? resultObj['projectDisplayValue'] : '-';
 
-                    const createDate = new Date(resultObj['czas_wprowadzenie']);
+                    // const createDate = new Date(resultObj['czas_wprowadzenie']);
 
-                    let uniqueNumberValue = resultObj['id'] + '/' + (createDate.getMonth() + 1) + '/' + createDate.getFullYear() + '/RN';
+                    let uniqueNumberValue = resultObj['sygnatura']; //resultObj['id'] + '/' + (createDate.getMonth() + 1) + '/' + createDate.getFullYear() + '/RN';
 
                     response += "<p><b>Sygnatura</b>: " + uniqueNumberValue + "</p>";
                     response += "<p><b>Dział</b>: " + resultObj['assignedDepartmentDisplayValue'] + "</p>";
@@ -225,7 +225,7 @@ $(document).ready(function () {
                         "function populateSelectOptions(selectId, optionsArr) { $.each(optionsArr, function(key, value) { $(selectId).append($('<option></option>').attr('value', value.value).text(value.label)); }); }" +
                         "function showArrivalModal(isOrdered) { if(isOrdered) { $('#change_arrival_case_id').val('" + rowId + "'); $('#change-arrival-modal').modal('show'); } else { $('#arrival_case_id').val('" + rowId + "'); $('#arrival-modal').modal('show'); } }" +
                         "function acceptWork(hasMPK, hasCost, hasSyntetyka, hasProject) { $.ajax({ type: 'GET', url: '../server/server_get_missing_details.php', success: (result) => { $('#accepted_case_id').val('" + rowId + "'); let resultObj = JSON.parse(result); populateSelectOptions('#modal-input-mpk', resultObj[0]); populateSelectOptions('#modal-input-cost', resultObj[1]); populateSelectOptions('#modal-input-syntetyka', resultObj[2]); populateSelectOptions('#modal-input-project', resultObj[3]); if(hasMPK) { $('#input-group-mpk').remove(); } if(hasCost) { $('#input-group-cost').remove(); } if(hasSyntetyka) { $('#input-group-syntetyka').remove(); } if(hasProject) { $('#input-group-project').remove(); } $('#work-acceptance-modal').modal('show'); } }); }" +
-                        "function changeState(targetStatus) { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: targetStatus}), success: (result) => { location.reload(); } }); }" +
+                        "function changeState(targetStatus) { $.ajax({ type: 'GET', url: '../server/server_set_status.php', data: ({rowId: " + rowId + ", status: targetStatus}), success: (result) => { new DataTable('#mainTable').ajax.reload(); } }); }" +
                         "function processFromExisting() { post('../index.php', {load_case_id: " + rowId + "}); }" +
                         "function rejectWork() { $('#work_rejected_case_id').val('" + rowId + "'); $('#work-rejected-modal').modal('show'); }" +
                         "function denyRequest() { $('#request_denied_case_id').val('" + rowId + "'); $('#request-denied-modal').modal('show'); }" +

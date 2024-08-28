@@ -39,13 +39,14 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
         if ($row) {
 
             $tempZgloszenie = new Zgloszenie(
-                $row['id'], $row['created_by'], $row['czas_wprowadzenie'], $row['zamowienie'], 
+                $row['id'], $row['sygnatura'], $row['created_by'], $row['czas_wprowadzenie'], $row['zamowienie'], 
                 $row['link'], $row['syntetyka'], $row['mpk'], $row['podmiot'], $row['cost'], 
                 $row['project'], $row['amount'], $row['amount_value'], $row['comment'], $row['status'],
                 $row['data_dostawy'], $row['attachment_uri'], $row['assigned_department'],
                 $row['history']);
             
             $info->id = $tempZgloszenie->get_id();
+            $info->sygnatura = $tempZgloszenie->get_sygnatura();
             $info->czas_wprowadzenie = $tempZgloszenie->get_czas_wprowadzenie();
             $info->order = $tempZgloszenie->get_order();
             // $info->orderDisplayValue = $tempZgloszenie->getOrderDisplayValue();

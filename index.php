@@ -35,6 +35,7 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
 
             $loadedCase = new Zgloszenie(
                 $row['id'],
+                $row['sygnatura'],
                 $row['created_by'],
                 $row['czas_wprowadzenie'],
                 $row['zamowienie'],
@@ -445,6 +446,23 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                     <th scope="col">Status</th>
                 </tr>
             </thead>
+
+            <!-- <tfoot>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Data zlecenia</th>
+                    <th scope="col">Zlecający</th>
+                    <th scope="col">Syntetyka</th>
+                    <th scope="col">MPK</th>
+                    <th scope="col">Kontrahent</th>
+                    <th scope="col">Koszt rodzajowy</th>
+                    <th scope="col">Projekt</th>
+                    <th scope="col">Link</th>
+                    <th scope="col">Ilość</th>
+                    <th scope="col">Wartość</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </tfoot> -->
 
         </table>
 

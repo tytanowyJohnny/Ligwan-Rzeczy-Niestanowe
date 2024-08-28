@@ -72,14 +72,16 @@ class Zgloszenie {
     protected $_history;
 
     protected $_amount_value;
+    protected $_sygnatura;
 
     public function __construct(
-        $_id, $_created_by, $_czas_wprowadzenie, $_order, $_link, $_syntetyka, $_mpk, 
+        $_id, $_sygnatura, $_created_by, $_czas_wprowadzenie, $_order, $_link, $_syntetyka, $_mpk, 
         $_podmiot, $_cost, $_project, $_amount, $_amount_value, $_comment, $_status, 
         $_data_dostawy, $_attachment_uri, $_assigned_department, $_history) {
 
 
         $this->_id = $_id;
+        $this->_sygnatura = $_sygnatura;
         $this->_created_by = $_created_by;
         $this->_czas_wprowadzenie = $_czas_wprowadzenie;
         $this->_order = $_order;
@@ -282,6 +284,26 @@ class Zgloszenie {
 
         return false;
 
+    }
+
+    /**
+     * Get the value of _sygnatura
+     */ 
+    public function get_sygnatura()
+    {
+        return $this->_sygnatura;
+    }
+
+    /**
+     * Set the value of _history
+     *
+     * @return  self
+     */ 
+    public function set_sygnatura($_sygnatura)
+    {
+        $this->_sygnatura = $_sygnatura;
+
+        return $this;
     }
 
 

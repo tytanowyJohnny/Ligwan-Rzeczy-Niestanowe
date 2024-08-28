@@ -39,6 +39,7 @@ if(!empty($requestData['search']['value'])) {
     $searchValue = $requestData['search']['value'];
 
     $query .= " WHERE z.id LIKE '%" . $searchValue . "%' OR";
+    $query .= " z.sygnatura LIKE '%" . $searchValue . "%' OR";
     $query .= " u.imie LIKE '%" . $searchValue . "%' OR";
     $query .= " u.nazwisko LIKE '%" . $searchValue . "%' OR";
     $query .= " z.czas_wprowadzenie LIKE '%" . $searchValue . "%' OR";
@@ -87,6 +88,7 @@ while ($row = $result->fetch_assoc()) {
 
         $obj = new Zgloszenie(
             $row['id'],
+            $row['sygnatura'],
             $row['created_by'],
             $row['czas_wprowadzenie'],
             $row['zamowienie'],
