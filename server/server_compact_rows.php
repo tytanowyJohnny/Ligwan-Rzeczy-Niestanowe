@@ -79,11 +79,8 @@ if(!empty($requestData['order'])) {
 }
 
 // PAGINATION
-$beginDraw = intval($requestData['start']);
-$endDraw = $beginDraw + intval($requestData['length']);
-
 if($requestData['length'] > 0)
-    $query .= " LIMIT " . $beginDraw . "," . $endDraw;
+    $query .= " LIMIT " . intval($requestData['start']) . "," . intval($requestData['length']);
 
 $result = $db->performQuery($query);
 $totalRowsResult = $db->performQuery($allRecordsQuery);
