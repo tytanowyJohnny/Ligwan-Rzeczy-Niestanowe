@@ -54,6 +54,7 @@ $(document).ready(function () {
         "responsive": true,
         "processing": true,
         "serverSide": true,
+        "paging": true,
         "order": [[1, 'desc']],
         "language": {
             "lengthMenu": "Pokaż _MENU_ zgłoszeń na stronie",

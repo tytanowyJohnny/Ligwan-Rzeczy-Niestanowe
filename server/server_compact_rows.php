@@ -75,6 +75,10 @@ if(!empty($requestData['order'])) {
 
 }
 
+// // PAGINATION
+// if($requestData['length'] > 0)
+//     $query .= " LIMIT " . $requestData['length'];
+
 
 $result = $db->performQuery($query);
 
@@ -142,11 +146,14 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
+// PAGINATION
+$pageData = array_slice($compactRowsArr, $requestData['start'], $requestData['length']);
+
 $json_data = array(
     "draw" => intval($requestData['draw']),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw.
     "recordsTotal" => count($compactRowsArr),  // total number of records
     "recordsFiltered" => count($compactRowsArr), // total number of records after searching, if there is no searching then totalFiltered = totalData
-    "data" => $compactRowsArr // total data array
+    "data" => $pageData//$compactRowsArr // total data array
 );
 
 
