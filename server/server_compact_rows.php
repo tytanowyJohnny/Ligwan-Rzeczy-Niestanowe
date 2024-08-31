@@ -137,18 +137,6 @@ while ($row = $result->fetch_assoc()) {
         );
 
         array_push($compactRowsArr, $compactInfo);
-
-        // // SEARCH
-        // if(!empty($requestData['search']['value'])) {
-
-        //     if(in_array($requestData['search']['value'], $compactInfo)) {
-        //         array_push($compactRowsArr, $compactInfo);
-        //     }
-
-        // } else {
-
-        //     array_push($compactRowsArr, $compactInfo);
-        // }
         
     }
 }
@@ -162,7 +150,7 @@ $json_data = array(
 
 
 echo (json_encode($json_data));
-// echo 'TEST';
+
 exit();
 
 ?>
