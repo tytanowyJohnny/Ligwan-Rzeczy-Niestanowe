@@ -53,15 +53,16 @@ if(!empty($requestData['search']['value'])) {
 
 }
 
-$allRecordsQuery;
+$allRecordsQuery = "SELECT COUNT(*) FROM `zgloszenia`";
 
 if(!$elevatedVisibility) {
+
+    $allRecordsQuery = "SELECT COUNT(*) FROM `zgloszenia` WHERE `assigned_department` = '" . $userDepartment . "'";
+
     if(!empty($requestData['search']['value'])) {
         $query .=  " AND z.assigned_department = '" . $userDepartment . "'";
-        $allRecordsQuery = "SELECT COUNT(*) FROM `zgloszenia`";
     } else {
         $query .=  " WHERE z.assigned_department = '" . $userDepartment . "'";
-        $allRecordsQuery = "SELECT COUNT(*) FROM `zgloszenia` WHERE `assigned_department` = '" . $userDepartment . "'";
     }
 }
 
