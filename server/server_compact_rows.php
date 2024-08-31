@@ -28,9 +28,6 @@ $elevatedVisibility = hasElevatedVisibility($userDepartment);
 $requestData = $_REQUEST;
 
 
-// $query = "SELECT * FROM `zgloszenia` WHERE `assigned_department` = '" . $userDepartment . "'";
-
-
 $query = "SELECT z.* FROM `zgloszenia` AS z INNER JOIN `users` AS u ON z.created_by = u.kod INNER JOIN `podmioty` AS p ON z.podmiot = p.ident INNER JOIN `statusy` AS s ON z.status = s.id";
 
 // SEARCH
@@ -56,11 +53,16 @@ if(!empty($requestData['search']['value'])) {
 
 }
 
+$allRecordsQuery;
+
 if(!$elevatedVisibility) {
-    if(!empty($requestData['search']['value']))
+    if(!empty($requestData['search']['value'])) {
         $query .=  " AND z.assigned_department = '" . $userDepartment . "'";
-    else
+        $allRecordsQuery = "SELECT COUNT(*) FROM `zgloszenia`";
+    } else {
         $query .=  " WHERE z.assigned_department = '" . $userDepartment . "'";
+        $allRecordsQuery = "SELECT COUNT(*) FROM `zgloszenia` WHERE `assigned_department` = '" . $userDepartment . "'";
+    }
 }
 
 // SORT
@@ -75,12 +77,16 @@ if(!empty($requestData['order'])) {
 
 }
 
-// // PAGINATION
-// if($requestData['length'] > 0)
-//     $query .= " LIMIT " . $requestData['length'];
+// PAGINATION
+$beginDraw = intval($requestData['start']);
+$endDraw = $beginDraw + intval($requestData['length']);
 
+if($requestData['length'] > 0)
+    $query .= " LIMIT " . $beginDraw . "," . $endDraw;
 
 $result = $db->performQuery($query);
+$totalRowsResult = $db->performQuery($allRecordsQuery);
+$totalRowsCount = mysqli_fetch_array($totalRowsResult);
 
 $db->dbDisconnect();
 
@@ -146,14 +152,11 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
-// PAGINATION
-$pageData = array_slice($compactRowsArr, $requestData['start'], $requestData['length']);
-
 $json_data = array(
     "draw" => intval($requestData['draw']),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw.
-    "recordsTotal" => count($compactRowsArr),  // total number of records
-    "recordsFiltered" => count($compactRowsArr), // total number of records after searching, if there is no searching then totalFiltered = totalData
-    "data" => $pageData//$compactRowsArr // total data array
+    "recordsTotal" => intval($totalRowsCount[0]),//intval($totalRows), //count($compactRowsArr),  // total number of records
+    "recordsFiltered" => !empty($requestData['search']['value']) ? count($compactRowsArr) : intval($totalRowsCount[0]), //count($compactRowsArr), // total number of records after searching, if there is no searching then totalFiltered = totalData
+    "data" => $compactRowsArr//$compactRowsArr // total data array
 );
 
 
