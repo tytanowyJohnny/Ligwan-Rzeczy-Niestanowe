@@ -179,6 +179,8 @@ $(document).ready(function () {
                                     response += "<button class='btn btn-success m-1' onclick=\"acceptWork(" + (resultObj['mpkDisplayValue'] != false) + ", " + (resultObj['costDisplayValue'] != false) + ", " + (resultObj['syntetykaDisplayValue'] != false) + ", " + (resultObj['projectDisplayValue'] != false) + ")\">" + $validTransition['action_name'] + "</button>";
                                 break;
 
+                            case '8': // DOSTARCZANIE
+                            case '9': // REALIZACJA
                             case '4': // ZATWIERDZANIE
                                 response += "<button class='btn btn-success m-1' onclick=\"changeState('" + $validTransition['target_status'] + "')\">" + $validTransition['action_name'] + "</button>";
                                 break;
