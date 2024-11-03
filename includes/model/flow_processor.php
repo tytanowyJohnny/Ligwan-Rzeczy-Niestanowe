@@ -4,16 +4,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/model/user.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/db/db.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/commonUtils.php';
 
-abstract class FLOW_STAGE {
-
-    const AWAITING_ACCEPTANCE = 0;
-    const REJECTED = 1;
-    const ACCEPTED = 2;
-    const APPROVED = 3;
-    const FINALIZED = 4;
-
-}
-
 class FlowProcessor {
 
     protected $_db;

@@ -182,6 +182,7 @@ $(document).ready(function () {
                             case '8': // DOSTARCZANIE
                             case '9': // REALIZACJA
                             case '4': // ZATWIERDZANIE
+                            case '10': // NA MAGAZYNIE
                                 response += "<button class='btn btn-success m-1' onclick=\"changeState('" + $validTransition['target_status'] + "')\">" + $validTransition['action_name'] + "</button>";
                                 break;
 

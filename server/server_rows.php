@@ -1,7 +1,7 @@
 <?php
 
 
-include_once('../db/db.php');
+include_once $_SERVER['DOCUMENT_ROOT'] . '/db/db.php';
 include_once('../includes/model/zgloszenie.php');
 include_once('../includes/model/flow_processor.php');
 include_once('../includes/model/user.php');
@@ -29,8 +29,6 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
     $db->dbConnect();
 
     $query = "SELECT * FROM `zgloszenia` WHERE `id`=".$rowId;
-
-    // echo ($query);
 
     $result = $db->performQuery($query);
 

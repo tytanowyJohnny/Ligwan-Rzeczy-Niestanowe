@@ -258,7 +258,7 @@ class Zgloszenie {
         $deliveryDate = $this->get_data_dostawy();
         $statusValue = $this->get_status();
 
-        if($deliveryDate != null && $statusValue != 8) // don't show when already deliverem
+        if($deliveryDate != null && $statusValue == 5) // show only for ordered status
             return $statusDisplayValue . "<br />(" . $deliveryDate . ")";
 
         return $statusDisplayValue;
