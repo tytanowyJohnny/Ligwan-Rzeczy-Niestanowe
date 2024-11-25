@@ -52,7 +52,8 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                 $row['data_dostawy'],
                 $row['attachment_uri'],
                 $row['assigned_department'],
-                $row['history']
+                $row['history'],
+                $row['cel_kosztu']
             );
         }
     }
@@ -394,6 +395,19 @@ if (isset ($_POST['load_case_id']) && !empty ($_POST['load_case_id'])) {
                         <div class="input-group has-validation mb-3">
                             <span class="input-group-text" id="basic-addon3">Komentarz</span>
                             <textarea class="form-control" id="input-comment" name="input-comment" rows="3"><?php if(isset($loadedCaseMode) && $loadedCaseMode) echo $loadedCase->get_comment()?></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2"></div>
+                </div>
+                <div class="row">
+
+                    <div class="col-sm-2"></div>
+
+                    <div class="col-sm-8">
+                        <div class="input-group has-validation mb-3">
+                            <span class="input-group-text" id="basic-addon3">Cel kosztu</span>
+                            <textarea class="form-control" id="input-cel-kosztu" name="input-cel-kosztu" rows="3" maxlength="255"><?php if(isset($loadedCaseMode) && $loadedCaseMode) echo $loadedCase->get_cel_kosztu()?></textarea>
                         </div>
                     </div>
 

@@ -144,7 +144,10 @@ $(document).ready(function () {
 
                     response += "<div style='overflow: hidden; position: relative; left: 20px; word-wrap: break-word;'><p><b>Komentarz:</b></p>";
                     response += "<p>" + resultObj['comment'] + "</p>";
+                    response += "</div>";
 
+                    response += "<div style='overflow: hidden; position: relative; left: 20px; word-wrap: break-word;'><p><b>Cel kosztu:</b></p>";
+                    response += "<p>" + resultObj['cel_kosztu'] + "</p>";
                     response += "</div>";
 
                     // if (resultObj[0]['status'] == 'new')

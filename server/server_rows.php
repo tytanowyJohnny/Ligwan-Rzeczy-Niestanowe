@@ -41,7 +41,7 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
                 $row['link'], $row['syntetyka'], $row['mpk'], $row['podmiot'], $row['cost'], 
                 $row['project'], $row['amount'], $row['amount_value'], $row['comment'], $row['status'],
                 $row['data_dostawy'], $row['attachment_uri'], $row['assigned_department'],
-                $row['history']);
+                $row['history'], $row['cel_kosztu']);
             
             $info->id = $tempZgloszenie->get_id();
             $info->sygnatura = $tempZgloszenie->get_sygnatura();
@@ -66,6 +66,7 @@ if (isset($_GET['rowId']) && !empty($_GET['rowId'])) {
             $info->attachment_uri = $tempZgloszenie->get_attachment_uri();
             $info->assigned_department = $tempZgloszenie->get_assigned_department();
             $info->assignedDepartmentDisplayValue = getAssignedDepartmentAbbr($tempZgloszenie->get_assigned_department());
+            $info->cel_kosztu = $tempZgloszenie->get_cel_kosztu();
             
 
             $fp = new FlowProcessor();

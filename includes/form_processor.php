@@ -31,6 +31,7 @@ $isValid_project = isset ($_POST['input-project']);
 $isValid_amount = isset ($_POST['input-amount']);
 $isValid_amount_value = isset ($_POST['input-amount-value']);
 $isValid_comment = isset ($_POST['input-comment']);
+$isValid_cel_kosztu = isset ($_POST['input-cel-kosztu']);
 
 $resetFlag = isset ($_POST['reset-flag']) && !empty ($_POST['reset-flag']);
 
@@ -70,11 +71,12 @@ if (!$resetFlag && $isValid_podmiot && $isValid_amount && $isValid_amount_value)
     $syntetykaValue = $isValid_syntetyka ? $_POST['input-syntetyka'] : '';
     $projectValue = $isValid_project ? $_POST['input-project'] : '';
     $commentValue = $isValid_comment ? $_POST['input-comment'] : '';
+    $celKosztu = $isValid_cel_kosztu ? $_POST['input-cel-kosztu'] : '';
 
     // Compose query
     $insertQuery = "INSERT INTO `zgloszenia` (`created_by`, `assigned_department`, `czas_wprowadzenie`, `link`, 
                                                     `syntetyka`, `mpk`, `podmiot`, `cost`, `project`, `amount`, 
-                                                    `amount_value`, `comment`, `attachment_uri`)
+                                                    `amount_value`, `comment`, `attachment_uri`, `cel_kosztu`)
                     VALUES (
                         '" . $user->getUsername() . "',
                         '" . $user->getAssignedDepartmentValue() . "',
@@ -88,7 +90,8 @@ if (!$resetFlag && $isValid_podmiot && $isValid_amount && $isValid_amount_value)
                         '" . $_POST['input-amount'] . "',
                         '" . $_POST['input-amount-value'] . "',
                         '" . $commentValue . "',
-                        '" . $fullImagePath . "')";
+                        '" . $fullImagePath . "',
+                        '" . $celKosztu . "')";
 
     // echo $insertQuery;
 

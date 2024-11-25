@@ -74,10 +74,12 @@ class Zgloszenie {
     protected $_amount_value;
     protected $_sygnatura;
 
+    protected $_cel_kosztu;
+
     public function __construct(
         $_id, $_sygnatura, $_created_by, $_czas_wprowadzenie, $_order, $_link, $_syntetyka, $_mpk, 
         $_podmiot, $_cost, $_project, $_amount, $_amount_value, $_comment, $_status, 
-        $_data_dostawy, $_attachment_uri, $_assigned_department, $_history) {
+        $_data_dostawy, $_attachment_uri, $_assigned_department, $_history, $_cel_kosztu) {
 
 
         $this->_id = $_id;
@@ -99,6 +101,7 @@ class Zgloszenie {
         $this->_attachment_uri = $_attachment_uri;
         $this->_assigned_department = $_assigned_department;
         $this->_history = $_history;
+        $this->_cel_kosztu = $_cel_kosztu;
 
     }
 
@@ -651,4 +654,30 @@ class Zgloszenie {
 
         return $this;
     }
+
+    /**
+     * Get the value of _cel_kosztu
+     */ 
+    public function get_cel_kosztu()
+    {
+
+        if(!$this->_cel_kosztu)
+            return '';
+
+        return $this->_cel_kosztu;
+    }
+
+    /**
+     * Set the value of _attachment_uri
+     *
+     * @return  self
+     */ 
+    public function set_cel_kosztu($_cel_kosztu)
+    {
+        $this->_cel_kosztu = $_cel_kosztu;
+
+        return $this;
+    }
+
+    
 }

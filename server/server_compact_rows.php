@@ -113,7 +113,8 @@ while ($row = $result->fetch_assoc()) {
             $row['data_dostawy'],
             $row['attachment_uri'],
             $row['assigned_department'],
-            $row['history']
+            $row['history'],
+            $row['cel_kosztu']
         );
 
         $compactInfo = array(
